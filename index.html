@@ -3,1293 +3,1044 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Lock System Pro</title>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <title>My Colony App - Fully Updated</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- ================================================== -->
+    <!--            CSS Styles (Original + Ad Style)        -->
+    <!-- ================================================== -->
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #f0f2f5;
+            --dark-color: #343a40;
+            --light-color: #fff;
+            --border-radius: 8px;
+            --grey-color: #65676b;
+            --red-color: #dc3545;
+            --green-color: #28a745;
+            --sent-message-bg: #dcf8c6;
+            --received-message-bg: #ffffff;
+            --warning-bg: #fff3cd;
+            --warning-border: #ffeeba;
+            --warning-text: #856404;
         }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; background-color: var(--secondary-color); color: var(--dark-color); }
         
-        body {
-            background-color: #f5f5f5;
-            color: #333;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .container {
-            max-width: 100%;
-            padding: 20px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .auth-container, .home-container {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        h1, h2 {
+        /* === AD BANNER CONTAINER STYLE === */
+        .banner-ad-container {
             text-align: center;
-            margin-bottom: 20px;
-            color: #2c3e50;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        
-        input, textarea, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        
-        textarea {
-            resize: none;
-        }
-        
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        
-        button:hover {
-            background-color: #2980b9;
-        }
-        
-        .toggle-auth {
-            text-align: center;
-            margin-top: 15px;
-        }
-        
-        .toggle-auth a {
-            color: #3498db;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        
-        .error-message {
-            color: #e74c3c;
-            text-align: center;
-            margin-top: 10px;
-        }
-        
-        .success-message {
-            color: #2ecc71;
-            text-align: center;
-            margin-top: 10px;
-        }
-        
-        /* Home Page Styles */
-        .header {
+            margin: 1rem auto;
+            padding: 0.5rem;
+            background-color: var(--secondary-color);
+            min-height: 50px;
+            max-width: 320px; /* To contain the ad */
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 20px;
         }
+
+        #auth-container { display: flex; justify-content: center; align-items: center; height: 100vh; padding: 1rem; }
+        .form-container { background: var(--light-color); padding: 2rem; border-radius: var(--border-radius); box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        .form-container h2 { margin-bottom: 1.5rem; }
+        .form-container input, .form-container textarea, .form-container label { width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .form-container label { border: none; padding: 0; text-align: left; font-weight: bold; margin-bottom: 0.25rem; }
+        .form-container button { width: 100%; padding: 0.8rem; background: var(--primary-color); color: var(--light-color); border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }
+        .form-container button:hover { opacity: 0.9; }
+        .form-container p { margin-top: 1rem; }
+        .form-container a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        #app-container header { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 1rem; background-color: var(--light-color); box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
         
-        .profile {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .header-btn { background: none; border: none; font-size: 1.5rem; color: var(--grey-color); cursor: pointer; padding: 5px; }
+
+        .header-right { display: flex; align-items: center; }
+        #language-switcher { margin-right: 15px; padding: 5px; border-radius: 4px; }
+        #profile-icon-container { display: flex; align-items: center; cursor: pointer; }
+        #header-user-name { margin-right: 10px; font-weight: bold; }
+        #header-user-photo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); }
+        #home-page { padding: 1rem; max-width: 680px; margin: 0 auto; }
+        .post-card { background: var(--light-color); border-radius: var(--border-radius); padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .post-header { display: flex; align-items: center; margin-bottom: 0.75rem; }
+        .post-header img { width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; object-fit: cover; }
+        .post-author-info { display: flex; flex-direction: column; }
+        .post-author-info strong { font-size: 0.95rem; }
+        .post-author-info small { font-size: 0.8rem; color: var(--grey-color); }
+        .post-content p { margin: 0.5rem 0; word-wrap: break-word; }
+        .post-content img { max-width: 100%; width: 100%; height: auto; border-radius: var(--border-radius); margin-top: 1rem; cursor: pointer; background-color: #f0f2f5; }
+        .post-stats { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e0e0e0; font-size: 0.9rem; color: var(--grey-color); }
+        .post-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; padding-top: 5px; }
+        .post-actions button { background: none; border: none; cursor: pointer; padding: 0.75rem; font-size: 0.95rem; color: var(--grey-color); display: flex; align-items: center; justify-content: center; border-radius: 4px; }
+        .post-actions button:hover { background-color: #f0f2f5; }
+        .post-actions button.liked { color: var(--primary-color); font-weight: bold; }
+        .post-actions i { margin-right: 8px; font-size: 1.2rem; }
         
-        .profile-pic {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-            object-fit: cover;
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; overflow-y: auto; display: none; align-items: center; justify-content: center; padding: 1rem; box-sizing: border-box; }
+        .modal.show { display: flex; }
+        .modal-content-wrapper { background: white; padding: 1rem; border-radius: var(--border-radius); width: 100%; max-width: 500px; position: relative; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column;}
+        .close-modal-btn { position: absolute; top: 10px; right: 20px; font-size: 2.5rem; background: none; border: none; cursor: pointer; color: var(--grey-color); z-index: 10; }
+        #profile-modal .modal-content-wrapper { max-width: 700px; padding: 0.5rem; }
+        .profile-header { text-align: center; margin-bottom: 1rem; padding: 1rem; }
+        #modal-user-photo { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; }
+        .profile-stats { font-size: 1.1rem; margin: 1rem 0; color: var(--grey-color); }
+        .profile-header button { padding: 0.5rem 1rem; margin: 0 5px; border-radius: 4px; cursor: pointer; border: 1px solid var(--primary-color); }
+        #logout-btn { background-color: var(--red-color); color: white; border-color: var(--red-color); }
+        #edit-profile-btn { background-color: var(--primary-color); color: white; }
+        #edit-profile-form-container { background: #f1f1f1; padding: 1.5rem; border-radius: var(--border-radius); margin-bottom: 1rem; }
+        #edit-profile-form input { display: block; width: 100%; padding: 0.8rem; margin-bottom: 1rem; box-sizing: border-box; border-radius: 4px; border: 1px solid #ccc; }
+        #edit-profile-form button { padding: 0.7rem 1.5rem; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        #user-posts-container .post-card .post-actions { grid-template-columns: 1fr; }
+        #user-posts-container .post-card .delete-btn { background-color: var(--red-color); color: white; width: 100%; }
+        #create-post-fab { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background-color: var(--primary-color); color: white; border-radius: 50%; border: none; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; display: flex; justify-content: center; align-items: center; z-index: 999; }
+        #create-post-form textarea, #create-post-form input { width: 100%; padding: 0.8rem; margin-bottom: 1rem; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box; }
+        #create-post-form textarea { min-height: 100px; resize: vertical; }
+        #create-post-form button { width: 100%; padding: 0.8rem; background: var(--primary-color); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }
+        #chat-fab { position: fixed; bottom: 20px; left: 20px; width: 56px; height: 56px; background-color: #25D366; color: white; border-radius: 50%; border: none; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; display: flex; justify-content: center; align-items: center; z-index: 999; }
+        #chat-modal, #private-chat-modal { padding: 0; }
+        #chat-modal .modal-content-wrapper, #private-chat-modal .modal-content-wrapper { padding: 0; width: 100%; max-width: 100%; height: 100%; max-height: 100%; border-radius: 0; background-color: var(--secondary-color); }
+        .chat-header { background: var(--light-color); padding: 1rem; border-bottom: 1px solid #ddd; text-align: center; position: sticky; top: 0; z-index: 5;}
+        #chat-messages-container { flex-grow: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .chat-message { display: flex; max-width: 80%; }
+        .chat-message.sent { align-self: flex-end; flex-direction: row-reverse; }
+        .chat-message.received { align-self: flex-start; }
+        .chat-message img.user-avatar { width: 35px; height: 35px; border-radius: 50%; margin: 0 10px; object-fit: cover; align-self: flex-end; }
+        .message-content { display: flex; flex-direction: column; }
+        .message-bubble { padding: 10px 15px; border-radius: 18px; word-wrap: break-word; }
+        .chat-message.sent .message-bubble { background-color: var(--sent-message-bg); border-top-right-radius: 4px; }
+        .chat-message.received .message-bubble { background-color: var(--received-message-bg); border-top-left-radius: 4px; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
+        .message-info { font-size: 0.75rem; color: var(--grey-color); margin-top: 4px; }
+        .chat-message.sent .message-info { text-align: right; margin-right: 5px; }
+        .chat-message.received .message-info { margin-left: 5px; }
+        .chat-image { max-width: 100%; border-radius: 10px; margin-top: 5px; cursor: pointer; }
+        #chat-form-container { background: var(--light-color); padding: 1rem; border-top: 1px solid #ddd; display: flex; gap: 10px; align-items: center; }
+        #chat-form-container input { flex-grow: 1; padding: 12px; border: 1px solid #ccc; border-radius: 20px; margin: 0; }
+        #chat-form-container button { background-color: var(--primary-color); color: white; border: none; border-radius: 50%; width: 45px; height: 45px; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .comment-entry { display: flex; align-items: flex-start; gap: 10px; padding: 8px; border-bottom: 1px solid #efefef; }
+        .comment-entry:last-child { border-bottom: none; }
+        .comment-entry img { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; margin-top: 5px; }
+        .comment-text-content { display: flex; flex-direction: column; background-color: var(--secondary-color); padding: 8px 12px; border-radius: 15px; flex-grow: 1; }  .comment-text-content strong { font-size: 0.9rem; }
+        .comment-text-content p { margin: 2px 0 0 0; font-size: 0.95rem; word-break: break-word; color: #050505; }
+        #users-list-container { display: flex; flex-direction: column; gap: 10px; padding: 1rem; }
+        .user-list-entry { display: flex; align-items: center; padding: 10px; border-radius: var(--border-radius); cursor: pointer; transition: background-color 0.2s; }
+        .user-list-entry:hover { background-color: #f0f2f5; }
+        .user-list-entry img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 15px; }
+        .user-info-and-status { flex-grow: 1; }
+        .user-info-and-status strong { font-size: 1.1rem; }
+        .user-presence { display: flex; align-items: center; font-size: 0.85rem; color: var(--grey-color); }
+        .presence-indicator { width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+        .presence-indicator.online { background-color: var(--green-color); }
+        .presence-indicator.offline { background-color: var(--grey-color); }
+        .private-chat-header { display: flex; align-items: center; justify-content: space-between; background: var(--light-color); padding: 0.75rem 1rem; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 5;}
+        .private-chat-user-info { display: flex; align-items: center; gap: 10px; cursor: pointer;}
+        .private-chat-user-info img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        .private-chat-user-info strong { font-size: 1.1rem; }
+        .private-chat-actions button { background: none; border: none; font-size: 1.5rem; color: var(--primary-color); cursor: pointer; margin-left: 15px; }
+        #private-chat-messages-container { flex-grow: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        #private-chat-form-container { background: var(--light-color); padding: 1rem; border-top: 1px solid #ddd; display: flex; gap: 10px; align-items: center; }
+        #private-chat-form-container input { flex-grow: 1; padding: 12px; border: 1px solid #ccc; border-radius: 20px; margin: 0; }
+        #private-chat-form-container button { background-color: var(--primary-color); color: white; border: none; border-radius: 50%; width: 45px; height: 45px; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        #call-modal { background-color: #2c3e50; z-index: 1001; padding: 2rem; color: white; flex-direction: column; justify-content: space-between; }
+        .call-info { text-align: center; margin-top: 30px; }
+        #call-user-photo { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        #call-user-name { font-size: 2rem; margin-top: 1.5rem; font-weight: 500; }
+        #call-status { font-size: 1.2rem; color: #bdc3c7; margin-top: 0.5rem; }
+        .call-actions { display: flex; justify-content: center; gap: 30px; margin-bottom: 50px; width: 100%; }
+        .call-actions button { width: 70px; height: 70px; border-radius: 50%; border: none; cursor: pointer; font-size: 1.8rem; color: white; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
+        .call-actions button:hover { transform: scale(1.1); }
+        #end-call-btn { background-color: var(--red-color); }
+        .action-btn-secondary { background-color: rgba(255, 255, 255, 0.2); }
+
+        /* ========= NAYA FEATURE: STORE / BUSINESS DASHBOARD CSS ========= */
+        #business-dashboard-modal .modal-content-wrapper,
+        #product-detail-modal .modal-content-wrapper,
+        #create-business-profile-modal .modal-content-wrapper,
+        #add-product-modal .modal-content-wrapper {
+             max-height: 95vh; max-width: 800px;
         }
+
+        #business-dashboard-modal .modal-content-wrapper {
+            max-width: 100%; width: 100%; height: 100%; max-height: 100%; border-radius: 0;
+            padding: 0; background-color: var(--secondary-color);
+        }
+        .dashboard-header {
+            display: flex; justify-content: space-between; align-items: center;
+            background-color: var(--light-color); padding: 0.75rem 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 10;
+        } 
+        .dashboard-header .close-modal-btn { position: static; font-size: 1.5rem; padding: 0 10px; color: var(--grey-color); }
+        .dashboard-header h3 { margin: 0; font-size: 1.2rem; flex-grow: 1; text-align: center; }
+        .dashboard-main { padding: 1rem; overflow-y: auto; height: calc(100vh - 60px); /* Adjusted for header */ }
         
-        .logout-btn {
-            background-color: #e74c3c;
-            width: auto;
-            padding: 8px 15px;
+        .business-profile-card {
+            background: var(--light-color); border-radius: var(--border-radius);
+            padding: 1.5rem; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.12); margin-bottom: 1.5rem;
         }
+        #business-profile-photo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-color); margin-bottom: 1rem; }
+        #business-profile-name { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.5rem 0; }
+        #business-profile-about { color: var(--grey-color); margin: 0 0 1rem 0; white-space: pre-wrap; }
+        .business-contact-info { display: flex; flex-direction: column; gap: 8px; align-items: center; margin-bottom: 1rem; text-align: center;}
+        .business-contact-info span { display: flex; align-items: center; gap: 8px; }
+        .business-contact-info i { color: var(--primary-color); }
+        .disclaimer-box {
+            padding: 1rem; background-color: var(--warning-bg); border: 1px solid var(--warning-border);
+            color: var(--warning-text); border-radius: var(--border-radius); font-size: 0.9rem; margin-top: 1rem; text-align: left;
+        } .disclaimer-box p { margin: 0; }
+
+        #products-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem;
+            margin-top: 1.5rem;
+        }  .product-card {
+            background: var(--light-color); border-radius: var(--border-radius);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow: hidden; position: relative; cursor: pointer;
+            display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        .product-card img { width: 100%; height: 160px; object-fit: cover; background-color: #eee; }
+        .product-card-info { padding: 1rem; flex-grow: 1; border-top: 1px solid #eee;}
+        .product-card-info h5 { margin: 0 0 5px 0; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+        .product-card-info p { margin: 0; font-size: 1.1rem; color: var(--green-color); font-weight: bold;}
+        .product-card .delete-btn {
+            position: absolute; top: 8px; right: 8px; background-color: rgba(220, 53, 69, 0.8); color: white;
+            border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 0.9rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            opacity: 0; transition: opacity 0.2s; backdrop-filter: blur(2px);
+        }
+        .product-card:hover .delete-btn { opacity: 1; }
         
-        .logout-btn:hover {
-            background-color: #c0392b;
+        #add-product-fab {
+            position: fixed; bottom: 80px; /* Adjusted to be above chat FAB */ right: 20px; width: 56px; height: 56px;
+            background-color: var(--green-color); color: white; border-radius: 50%; border: none;
+            font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer;
+            display: none; /* Initially hidden */ justify-content: center; align-items: center; z-index: 1001;
         }
+        #no-business-profile-msg { text-align: center; margin-top: 4rem; padding: 1rem; }
         
-        .menu-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #333;
-            width: auto;
-            padding: 0 10px;
+        /* Product Detail Modal ke liye Naya CSS */
+        #product-detail-modal .modal-content-wrapper {
+             max-height: 95vh; max-width: 700px; padding: 0;
         }
+        #product-detail-content { overflow-y: auto; max-height: calc(95vh); }
+        #product-detail-modal .product-image {
+            width: 100%; height: auto; max-height: 50vh; object-fit: cover; background-color: #eee; cursor: pointer;
+        }  .product-detail-body { padding: 1.5rem; }
+        .product-detail-body h2 { margin-top: 0; margin-bottom: 0.5rem; font-size: 2rem; font-weight: 600; }
+        .product-detail-body .price { font-size: 1.8rem; color: var(--green-color); font-weight: bold; margin-bottom: 1rem; }
+        .product-detail-body .details { margin: 1.5rem 0; color: var(--dark-color); white-space: pre-wrap; font-size: 1rem; line-height: 1.6; }
+        .product-detail-body hr { border: 0; border-top: 1px solid #eee; margin: 1.5rem 0; }
+        .product-detail-body .post-actions { grid-template-columns: 1fr 1fr 1fr; margin-top: 1rem; } 
         
-        .lock-btn-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 100;
-        }
+        .seller-info-card { background: var(--secondary-color); padding: 1.5rem; border-radius: var(--border-radius); margin-top: 1.5rem; border: 1px solid #e0e0e0;}
+        .seller-info-card h4 { margin-top: 0; margin-bottom: 1rem; font-size: 1.2rem;}
+        .seller-info-card .business-contact-info { align-items: flex-start; text-align: left; }
+        .seller-info-card .business-contact-info span { font-size: 1rem; }
+        .seller-info-card i { width: 25px; text-align: center; font-size: 1.1rem; }
         
-        .lock-btn {
-            width: 60px;
-            height: 80px;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%233498db"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            border: none;
-            background-color: transparent;
-            cursor: pointer;
-        }
-        
-        .lock-btn:hover {
-            transform: scale(1.1);
-        }
-        
-        /* Secure Area Modal */
-        .secure-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: white;
-            z-index: 1000;
-            padding: 20px;
-        }
-        
-        .secure-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .close-secure {
-            font-size: 24px;
-            cursor: pointer;
-        }
-        
-        .secure-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .tab-buttons {
-            display: flex;
-            margin-bottom: 15px;
-        }
-        
-        .tab-btn {
-            flex: 1;
-            padding: 10px;
-            background-color: #eee;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .tab-btn.active {
-            background-color: #3498db;
-            color: white;
-        }
-        
-        .tab-content {
-            display: none;
-            flex: 1;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .secure-textarea {
-            width: 100%;
-            height: 200px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-        
-        .media-preview {
-            max-width: 100%;
-            max-height: 200px;
-            margin-bottom: 15px;
-            display: none;
-        }
-        
-        .save-btn {
-            background-color: #2ecc71;
-        }
-        
-        .save-btn:hover {
-            background-color: #27ae60;
-        }
-        
-        /* Profile Modal */
-        .profile-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: white;
-            z-index: 1000;
-            padding: 20px;
-        }
-        
-        .profile-form {
-            margin-top: 20px;
-        }
-        
-        .profile-preview {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 20px;
-            display: block;
-        }
-        
-        .color-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .color-option {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-        
-        .color-option.selected {
-            border-color: #000;
-        }
-        
-        /* App Upload Modal */
-        .app-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: white;
-            z-index: 1000;
-            padding: 20px;
-        }
-        
-        .app-form {
-            margin-top: 20px;
-        }
-        
-        /* Review Password Modal */
-        .review-password-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: white;
-            z-index: 1000;
-            padding: 20px;
-            text-align: center;
-        }.review-password-form {
-            max-width: 300px;
-            margin: 50px auto;
-        }
-        
-        /* Apps Display */
-        .apps-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-            flex: 1;
-            overflow-y: auto;
-            padding-bottom: 80px; /* Space for lock button */
-        }
-        
-        .app-item {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            background-color: white;
-            transition: transform 0.2s;
-            cursor: pointer;
-        }
-        
-        .app-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .app-item h3 {
-            margin-bottom: 10px;
-            color: #2c3e50;
-        }
-        
-        .app-item p {
-            margin-bottom: 10px;
-            color: #666;
-        }
-        
-        .app-item img {
-            max-width: 100%;
-            max-height: 150px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-        }
-        
-        .app-item .app-meta {
-            display: flex;
-            justify-content: space-between;
-            color: #7f8c8d;
-            font-size: 14px;
-            margin-top: 10px;
-        }
-        
-        .stars {
-            color: #f1c40f;
-        }
-        
-        /* App Play Modal */
-        .app-play-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: white;
-            z-index: 1000;
-            padding: 20px;
-        }
-        
-        .app-play-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .app-play-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            height: calc(100% - 60px);
-        }
-        
-        .app-play-frame {
-            flex: 1;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-        
-        .app-play-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-        }
-        
-        .rate-btn {
-            background-color: #f1c40f;
-        }
-        
-        .close-app-btn {
-            background-color: #7f8c8d;
-        }
     </style>
 </head>
 <body>
-    <!-- Auth Container (Login/Signup) -->
-    <div class="container auth-container" id="authContainer">
-        <div id="loginForm">
-            <h1>Login</h1>
-            <div class="form-group">
-                <label for="loginEmail">Email</label>
-                <input type="email" id="loginEmail" placeholder="Enter your email">
-            </div>
-            <div class="form-group">
-                <label for="loginPassword">Password</label>
-                <input type="password" id="loginPassword" placeholder="Enter your password">
-            </div>
-            <button id="loginBtn">Login</button>
-            <div class="toggle-auth">
-                <p>Don't have an account? <a id="showSignup">Sign up</a></p>
-            </div>
-            <div class="error-message" id="loginError"></div>
-        </div>
-        
-        <div id="signupForm" style="display: none;">
-            <h1>Sign Up</h1>
-            <div class="form-group">
-                <label for="signupName">Name</label>
-                <input type="text" id="signupName" placeholder="Enter your name">
-            </div>
-            <div class="form-group">
-                <label for="signupEmail">Email</label>
-                <input type="email" id="signupEmail" placeholder="Enter your email">
-            </div>
-            <div class="form-group">
-                <label for="signupPassword">Password</label>
-                <input type="password" id="signupPassword" placeholder="Create a password">
-            </div>
-            <div class="form-group">
-                <label for="signupPhoto">Profile Photo URL (Optional)</label>
-                <input type="text" id="signupPhoto" placeholder="Paste image link">
-            </div>
-            <button id="signupBtn">Sign Up</button>
-            <div class="toggle-auth">
-                <p>Already have an account? <a id="showLogin">Login</a></p>
-            </div>
-            <div class="error-message" id="signupError"></div>
-            <div class="success-message" id="signupSuccess"></div>
-        </div>
+    <!-- ================================================== -->
+    <!--          HTML Content (With Static Ads)            -->
+    <!-- ================================================== -->
+    <div id="auth-container">
+        <div class="form-container" id="login-container"><h2 data-lang-key="loginTitle">Login</h2><form id="login-form"><input type="email" id="login-email" placeholder="Email" required><input type="password" id="login-password" placeholder="Password" required><button type="submit" data-lang-key="loginBtn">Login</button></form><p><span data-lang-key="noAccount">Don't have an account?</span> <a href="#" id="show-signup" data-lang-key="signupLink">Sign Up</a></p></div>
+        <div class="form-container" id="signup-container" style="display: none;"><h2 data-lang-key="signupTitle">Sign Up</h2><form id="signup-form"><input type="text" id="signup-name" placeholder="Full Name" required><input type="url" id="signup-photo" placeholder="Photo URL" required><input type="email" id="signup-email" placeholder="Email (For Login)" required><input type="password" id="signup-password" placeholder="Password (min. 6 characters)" required><button type="submit" data-lang-key="signupBtn">Sign Up</button></form><p><span data-lang-key="hasAccount">Already have an account?</span> <a href="#" id="show-login" data-lang-key="loginLink">Login</a></p></div>
     </div>
-    
-    <!-- Home Container -->
-    <div class="container home-container" id="homeContainer" style="display: none;">
-        <div class="header">
-            <div class="profile" id="profileBtn">
-                <img id="profilePic" src="https://via.placeholder.com/150" alt="Profile" class="profile-pic">
-                <span id="profileName"></span>
+
+    <div id="app-container" style="display: none;">
+        <header>
+            <div class="header-left">
+                <button id="show-business-dashboard-btn" class="header-btn" title="My Business Store"><i class="fas fa-store"></i></button>
+                <button id="show-users-list-btn" class="header-btn" title="Show All Users"><i class="fas fa-users"></i></button>
             </div>
-            <div>
-                <button class="menu-btn" id="menuBtn">⋮</button>
-                <button class="logout-btn" id="logoutBtn">Logout</button>
-            </div>
-        </div>
-        
-        <h2>Welcome, <span id="welcomeName"></span></h2>
-        
-        <div id="appsDisplay" class="apps-container">
-            <!-- Approved apps will be displayed here -->
-        </div>
-        
-        <div class="lock-btn-container">
-            <button class="lock-btn" id="lockBtn" title="Open secure area"></button>
-        </div>
-    </div>
-    
-    <!-- Secure Area Modal -->
-    <div class="secure-modal" id="secureModal">
-        <div class="secure-header">
-            <h2>Your Secure Data</h2>
-            <span class="close-secure" id="closeSecure">&times;</span>
-        </div>
-        
-        <div class="secure-content">
-            <div class="tab-buttons">
-                <button class="tab-btn active" data-tab="notes">Notes</button>
-                <button class="tab-btn" data-tab="media">Media</button>
-                <button class="tab-btn" data-tab="review">Review Apps</button>
-            </div>
-            
-            <div class="tab-content active" id="notesTab">
-                <textarea class="secure-textarea" id="secureTextarea" placeholder="Store your secure notes here..."></textarea>
-                <button class="save-btn" id="saveNotesBtn">Save Notes</button>
-            </div>
-            
-            <div class="tab-content" id="mediaTab">
-                <select id="mediaType">
-                    <option value="image">Image</option>
-                    <option value="video">Video</option>
-                </select>
-                <input type="text" id="mediaUrl" placeholder="Paste media URL" style="margin-top: 10px;">
-                <textarea id="mediaCaption" placeholder="Caption (optional)" style="margin-top: 10px;"></textarea>
-                <img src="" class="media-preview" id="imagePreview">
-                <video controls class="media-preview" id="videoPreview"></video>
-                <button class="save-btn" id="saveMediaBtn" style="margin-top: 10px;">Save Media</button>
-            </div>
-            
-            <div class="tab-content" id="reviewTab">
-                <div id="pendingApps">
-                    <!-- Pending apps for review will be displayed here -->
+            <div class="header-right">
+                <select id="language-switcher"><option value="en">English</option><option value="hi">हिन्दी</option></select>
+                <div id="profile-icon-container">
+                    <span id="header-user-name"></span>
+                    <img id="header-user-photo" src=" " alt="User Photo">
                 </div>
             </div>
-        </div>
+        </header>
+        <main id="home-page">
+            <!-- BANNER AD: HOME TOP -->
+            <div class="banner-ad-container">
+                <script type="text/javascript">
+                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
+            </div>
+            <div id="public-feed-container"></div>
+            <!-- BANNER AD: HOME BOTTOM -->
+            <div class="banner-ad-container">
+                <script type="text/javascript">
+                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
+            </div>
+        </main>
+        <button id="create-post-fab" title="Create a Post"><i class="fas fa-plus"></i></button>
+        <button id="chat-fab" title="Open Colony Chat"><i class="fas fa-comments"></i></button>
     </div>
     
-    <!-- Profile Modal -->
-    <div class="profile-modal" id="profileModal">
-        <div class="secure-header">
-            <h2>Edit Profile</h2>
-            <span class="close-secure" id="closeProfileModal">&times;</span>
-        </div>
-        
-        <img src="https://via.placeholder.com/150" class="profile-preview" id="profilePreview">
-        
-        <div class="profile-form">
-            <div class="form-group">
-                <label for="editName">Name</label>
-                <input type="text" id="editName">
+    <!-- Modals -->
+    <div id="create-post-modal" class="modal"><div class="modal-content-wrapper"><button class="close-modal-btn" data-target="create-post-modal">×</button><h3 data-lang-key="createPostTitle">Create a new post</h3><form id="create-post-form"><textarea id="post-text" placeholder="What's on your mind?" required></textarea><input type="url" id="post-image-url" data-lang-key="imageUrlPlaceholder" placeholder="Paste Image URL here (optional)"><button type="submit" data-lang-key="postBtn">Post</button></form></div></div>
+    
+    <div id="profile-modal" class="modal">
+        <div class="modal-content-wrapper">
+            <button class="close-modal-btn" data-target="profile-modal">×</button>
+            <!-- BANNER AD: PROFILE TOP -->
+            <div class="banner-ad-container">
+                <script type="text/javascript">
+                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
             </div>
-            
-            <div class="form-group">
-                <label for="editPhoto">Profile Photo URL</label>
-                <input type="text" id="editPhoto" placeholder="Paste image link">
-            </div>
-            
-            <div class="form-group">
-                <label>Profile Color</label>
-                <div class="color-options">
-                    <div class="color-option selected" style="background-color: #3498db;" data-color="#3498db"></div>
-                    <div class="color-option" style="background-color: #e74c3c;" data-color="#e74c3c"></div>
-                    <div class="color-option" style="background-color: #2ecc71;" data-color="#2ecc71"></div>
-                    <div class="color-option" style="background-color: #f1c40f;" data-color="#f1c40f"></div>
-                    <div class="color-option" style="background-color: #9b59b6;" data-color="#9b59b6"></div>
-                    <div class="color-option" style="background-color: #1abc9c;" data-color="#1abc9c"></div>
+            <div id="profile-content">
+                <div class="profile-header">
+                    <img id="modal-user-photo" src="" alt="User Photo">
+                    <h2 id="modal-user-name"></h2>
+                    <p class="profile-stats"><strong id="post-count">0</strong> <span data-lang-key="posts">Posts</span></p>
+                    <button id="edit-profile-btn" data-lang-key="editProfileBtn">Edit Profile</button>
+                    <button id="logout-btn" data-lang-key="logoutBtn">Logout</button>
+                </div>
+                <div id="edit-profile-form-container" style="display: none;">
+                    <form id="edit-profile-form">
+                        <input type="text" id="edit-name" placeholder="New Name">
+                        <input type="url" id="edit-photo" placeholder="New Photo URL">
+                        <button type="submit" data-lang-key="saveChangesBtn">Save Changes</button>
+                    </form>
+                </div>
+                <div class="user-posts-section">
+                    <h3 data-lang-key="myPostsTitle">My Posts</h3>
+                    <div id="user-posts-container"></div>
                 </div>
             </div>
-            
-            <button class="save-btn" id="saveProfileBtn">Save Profile</button>
+            <!-- BANNER AD: PROFILE BOTTOM -->
+            <div class="banner-ad-container">
+                <script type="text/javascript">
+                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
+            </div>
         </div>
     </div>
-    
-    <!-- App Upload Modal -->
-    <div class="app-modal" id="appModal">
-        <div class="secure-header">
-            <h2>Upload New App</h2>
-            <span class="close-secure" id="closeAppModal">&times;</span>
-        </div>
-        
-        <div class="app-form">
-            <div class="form-group">
-                <label for="appName">App Name</label>
-                <input type="text" id="appName" placeholder="Enter app name">
+
+    <div id="chat-modal" class="modal">
+        <div class="modal-content-wrapper">
+            <div class="chat-header"><h3>Colony Chat</h3><button class="close-modal-btn" data-target="chat-modal">×</button></div>
+            <!-- BANNER AD: COLONY CHAT TOP -->
+            <div class="banner-ad-container">
+                <script type="text/javascript">
+                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
             </div>
-            
-            <div class="form-group">
-                <label for="appDescription">Description</label>
-                <textarea id="appDescription" placeholder="Enter app description"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="appImage">App Image URL</label>
-                <input type="text" id="appImage" placeholder="Paste image link">
-            </div>
-            
-            <div class="form-group">
-                <label for="appCode">App Code (HTML/JS/CSS)</label>
-                <textarea id="appCode" placeholder="Paste your app code here"></textarea>
-            </div>
-            
-            <button class="save-btn" id="submitAppBtn">Submit App</button>
-            <div class="error-message" id="appError"></div>
-        </div>
-    </div>
-    
-    <!-- Review Password Modal -->
-    <div class="review-password-modal" id="reviewPasswordModal">
-        <div class="secure-header">
-            <h2>Enter Review Password</h2>
-        </div>
-        
-        <div class="review-password-form">
-            <div class="form-group">
-                <input type="password" id="reviewPassword" placeholder="Enter review password">
-            </div>
-            <button id="submitReviewPassword">Submit</button>
-            <div class="error-message" id="reviewPasswordError"></div>
-        </div>
-    </div>
-    
-    <!-- App Play Modal -->
-    <div class="app-play-modal" id="appPlayModal">
-        <div class="app-play-header">
-            <h2 id="playAppName">App Name</h2>
-            <span class="close-secure" id="closeAppPlayModal">&times;</span>
-        </div>
-        
-        <div class="app-play-content">
-            <iframe class="app-play-frame" id="appPlayFrame" sandbox="allow-scripts allow-same-origin"></iframe>
-            <div class="app-play-actions">
-                <button class="rate-btn" id="rateAppBtn">Rate this App</button>
-                <button class="close-app-btn" id="closeAppPlayBtn">Close</button>
+            <div id="chat-messages-container"></div>
+            <div id="chat-form-container">
+                <form id="chat-form" style="display: flex; width: 100%; gap: 10px;">
+                    <input type="text" id="chat-message-input" placeholder="Type a message or paste an image URL..." autocomplete="off" required>
+                    <button type="submit" title="Send"><i class="fas fa-paper-plane"></i></button>
+                </form>
             </div>
         </div>
     </div>
     
+    <div id="image-viewer-modal" class="modal" style="background: rgba(0,0,0,0.9);"><button class="close-modal-btn" data-target="image-viewer-modal" style="color: white; font-size: 3rem; top: 20px; right: 30px;">×</button><img id="fullscreen-image" src="" style="max-width: 95vw; max-height: 95vh; object-fit: contain;" alt="Fullscreen Image"></div>
+    
+    <div id="comments-modal" class="modal"><div class="modal-content-wrapper" style="display: flex; flex-direction: column; max-height: 85vh; padding: 1rem;"><div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #dbdbdb; padding-bottom: 0.5rem;"><h3 style="margin: 0;">Comments</h3><button class="close-modal-btn" data-target="comments-modal" style="position: static; font-size: 2rem;">×</button></div><div id="comments-list-container" style="flex-grow: 1; overflow-y: auto; padding: 1rem 0;"></div><form id="add-comment-form" style="display: flex; gap: 10px; padding-top: 1rem; border-top: 1px solid #eee;"><input type="text" id="comment-input" placeholder="Add a comment..." required style="flex-grow: 1; padding: 0.8rem; border-radius: 20px; border: 1px solid #ccc; background: #f0f2f5;"><button type="submit" style="background-color: var(--primary-color); color: white; border: none; border-radius: 50%; width: 45px; height: 45px; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;"><i class="fas fa-paper-plane"></i></button></form></div></div>
+    
+    <div id="users-list-modal" class="modal">
+        <div class="modal-content-wrapper">
+            <button class="close-modal-btn" data-target="users-list-modal">×</button>
+            <h3>All Users</h3>
+            <!-- BANNER AD: USERS LIST TOP -->
+            <div class="banner-ad-container">
+                <script type="text/javascript">
+                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
+            </div>
+            <div id="users-list-container"></div>
+            <!-- BANNER AD: USERS LIST BOTTOM -->
+            <div class="banner-ad-container">
+                <script type="text/javascript">
+                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
+            </div>
+        </div>
+    </div>
+
+    <div id="private-chat-modal" class="modal">
+        <div class="modal-content-wrapper">
+            <div class="private-chat-header"><button class="close-modal-btn" data-target="private-chat-modal" style="position: static; font-size: 1.5rem; color: var(--grey-color);">‹</button><div id="private-chat-user-info" class="private-chat-user-info"><img src="" alt="User"><strong></strong></div><div id="private-chat-actions" class="private-chat-actions"><button title="Video Call" data-call-type="video"><i class="fas fa-video"></i></button><button title="Audio Call" data-call-type="audio"><i class="fas fa-phone"></i></button></div></div>
+            <!-- BANNER AD: PRIVATE CHAT TOP -->
+            <div class="banner-ad-container">
+                <script type="text/javascript">
+                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
+            </div>
+            <div id="private-chat-messages-container"></div>
+            <div id="private-chat-form-container"><form id="private-chat-form" style="display: flex; width: 100%; gap: 10px;"><input type="text" id="private-chat-message-input" placeholder="Type a message..." autocomplete="off" required><button type="submit" title="Send"><i class="fas fa-paper-plane"></i></button></form></div>
+        </div>
+    </div>
+
+    <div id="call-modal" class="modal"><div class="call-info"><img id="call-user-photo" src="" alt="User"><h2 id="call-user-name"></h2><p id="call-status">Calling...</p></div><div class="call-actions"><button class="action-btn-secondary" title="Mute"><i class="fas fa-microphone-slash"></i></button><button id="end-call-btn" title="End Call"><i class="fas fa-phone-slash"></i></button><button class="action-btn-secondary" title="Speaker"><i class="fas fa-volume-up"></i></button></div></div>
+
+    <!-- ========= NAYA FEATURE: STORE / BUSINESS DASHBOARD MODALS ========= -->
+    <div id="business-dashboard-modal" class="modal">
+        <div class="modal-content-wrapper">
+            <div class="dashboard-header">
+                <button class="close-modal-btn" data-target="business-dashboard-modal" title="Back to App">‹</button>
+                <h3>My Business Store</h3>
+                <button id="edit-business-profile-btn" class="header-btn" style="font-size: 1.2rem;" title="Edit Business Profile"><i class="fas fa-edit"></i></button>
+            </div>
+            <!-- BANNER AD: BUSINESS DASHBOARD TOP -->
+            <div class="banner-ad-container">
+                <script type="text/javascript">
+                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
+            </div>
+            <div id="business-dashboard-main-content" class="dashboard-main">
+                <!-- Business Profile aur Products yahan dynamically load honge -->
+            </div>
+            <!-- BANNER AD: BUSINESS DASHBOARD BOTTOM -->
+            <div class="banner-ad-container">
+                <script type="text/javascript">
+                    atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"></script>
+            </div>
+        </div>
+        <button id="add-product-fab" title="Add a New Product/Service"><i class="fas fa-plus"></i></button>
+    </div>
+
+    <div id="create-business-profile-modal" class="modal">
+        <div class="modal-content-wrapper">
+            <button class="close-modal-btn" data-target="create-business-profile-modal">×</button>
+            <h3>Create Your Business Profile</h3>
+            <p style="font-size: 0.9rem; color: var(--grey-color); margin-top: -1rem; margin-bottom: 1.5rem;">Aapki yeh jaankari public ko dikhegi. Taki log aapse sampark kar sakein.</p>
+            <form id="create-business-profile-form" style="padding:0; box-shadow:none; text-align: left;">
+                <label for="business-name-input">Business / Shop / Professional Name*</label>
+                <input type="text" id="business-name-input" placeholder="e.g., Sharma Kirana Store" required>
+                <label for="business-photo-input">Profile Photo URL*</label>
+                <input type="url" id="business-photo-input" placeholder="Aapke logo ya dukaan ka photo URL" required>
+                <label for="business-phone-input">Contact Mobile Number*</label>
+                <input type="tel" id="business-phone-input" placeholder="Customers ke liye mobile number" required>
+                <label for="business-email-input">Contact Email (Optional)</label>
+                <input type="email" id="business-email-input" placeholder="Email for customers (zaroori nahi)">
+                <label for="business-about-input">About Your Business / Address*</label>
+                <textarea id="business-about-input" rows="3" placeholder="Aap kya karte hain aur aapka pata. e.g., General Store, 123 Colony Road..." required></textarea>
+                <button type="submit">Create and Save Profile</button>
+            </form>
+        </div>
+    </div> 
+    
+    <div id="add-product-modal" class="modal">
+        <div class="modal-content-wrapper">
+            <button class="close-modal-btn" data-target="add-product-modal">×</button>
+            <h3>Add New Product / Service</h3>
+            <form id="add-product-form" style="padding:0; box-shadow:none; text-align: left;">
+                <label for="product-name-input">Product / Service Name*</label>
+                <input type="text" id="product-name-input" placeholder="e.g., Aashirvaad Atta 5kg" required>
+                <label for="product-price-input">Price / Rate*</label>
+                <input type="text" id="product-price-input" placeholder="e.g., ₹500 or 1500/month" required>
+                <label for="product-detail-input">Product Details*</label>
+                <textarea id="product-detail-input" rows="4" placeholder="Product ke baare me jaankari, features, etc." required></textarea>
+                <label for="product-image-url-input">Product Photo URL* (Ek Photo)</label>
+                <input type="url" id="product-image-url-input" placeholder="Product ke photo ka URL" required>
+                <button type="submit">Add Product</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="product-detail-modal" class="modal">
+        <div class="modal-content-wrapper">
+            <button class="close-modal-btn" data-target="product-detail-modal" style="color: white; background-color: rgba(0,0,0,0.4); border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; top: 15px; right: 15px; z-index: 20; font-size: 1.5rem;">×</button>
+            <div id="product-detail-content">
+                <!-- Product details, like/comment system yahan load hoga -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+
     <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDtHmRpLsIXvMAGPsEZ2L4wveGGxVUTCyM",
-            authDomain: "sample-firebase-ai-app-1756e.firebaseapp.com",
-            databaseURL: "https://sample-firebase-ai-app-1756e-default-rtdb.firebaseio.com",
-            projectId: "sample-firebase-ai-app-1756e",
-            storageBucket: "sample-firebase-ai-app-1756e.appspot.com",
-            messagingSenderId: "574833031218",
-            appId: "1:574833031218:web:ccdc4ff48358e9686b242b"
-        };
-        
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const database = firebase.database();
-        
-        // DOM Elements
-        const authContainer = document.getElementById('authContainer');
-        const homeContainer = document.getElementById('homeContainer');
-        const loginForm = document.getElementById('loginForm');
-        const signupForm = document.getElementById('signupForm');
-        const showSignup = document.getElementById('showSignup');
-        const showLogin = document.getElementById('showLogin');
-        const loginBtn = document.getElementById('loginBtn');
-        const signupBtn = document.getElementById('signupBtn');
-        const loginEmail = document.getElementById('loginEmail');
-        const loginPassword = document.getElementById('loginPassword');
-        const signupName = document.getElementById('signupName');
-        const signupEmail = document.getElementById('signupEmail');
-        const signupPassword = document.getElementById('signupPassword');
-        const signupPhoto = document.getElementById('signupPhoto');
-        const loginError = document.getElementById('loginError');
-        const signupError = document.getElementById('signupError');
-        const signupSuccess = document.getElementById('signupSuccess');
-        const welcomeName = document.getElementById('welcomeName');
-        const profileName = document.getElementById('profileName');
-        const profilePic = document.getElementById('profilePic');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const menuBtn = document.getElementById('menuBtn');
-        const lockBtn = document.getElementById('lockBtn');
-        const secureModal = document.getElementById('secureModal');
-        const closeSecure = document.getElementById('closeSecure');
-        const secureTextarea = document.getElementById('secureTextarea');
-        const saveNotesBtn = document.getElementById('saveNotesBtn');
-        const profileBtn = document.getElementById('profileBtn');
-        const profileModal = document.getElementById('profileModal');
-        const closeProfileModal = document.getElementById('closeProfileModal');
-        const profilePreview = document.getElementById('profilePreview');
-        const editName = document.getElementById('editName');
-        const editPhoto = document.getElementById('editPhoto');
-        const saveProfileBtn = document.getElementById('saveProfileBtn');
-        const tabButtons = document.querySelectorAll('.tab-btn');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const mediaType = document.getElementById('mediaType');
-        const mediaUrl = document.getElementById('mediaUrl');
-        const mediaCaption = document.getElementById('mediaCaption');
-        const imagePreview = document.getElementById('imagePreview');
-        const videoPreview = document.getElementById('videoPreview');
-        const saveMediaBtn = document.getElementById('saveMediaBtn');
-        const colorOptions = document.querySelectorAll('.color-option');
-        const appModal = document.getElementById('appModal');
-        const closeAppModal = document.getElementById('closeAppModal');
-        const appName = document.getElementById('appName');
-        const appDescription = document.getElementById('appDescription');
-        const appImage = document.getElementById('appImage');
-        const appCode = document.getElementById('appCode');
-        const submitAppBtn = document.getElementById('submitAppBtn');
-        const appError = document.getElementById('appError');
-        const reviewPasswordModal = document.getElementById('reviewPasswordModal');
-        const reviewPassword = document.getElementById('reviewPassword');
-        const submitReviewPassword = document.getElementById('submitReviewPassword');
-        const reviewPasswordError = document.getElementById('reviewPasswordError');
-        const pendingApps = document.getElementById('pendingApps');
-        const appsDisplay = document.getElementById('appsDisplay');
-        const appPlayModal = document.getElementById('appPlayModal');
-        const playAppName = document.getElementById('playAppName');
-        const appPlayFrame = document.getElementById('appPlayFrame');
-        const closeAppPlayModal = document.getElementById('closeAppPlayModal');
-        const closeAppPlayBtn = document.getElementById('closeAppPlayBtn');
-        const rateAppBtn = document.getElementById('rateAppBtn');
+    // ======================================================
+    //     FIREBASE & JAVASCRIPT (Cleaned Version)
+    // ======================================================
+    const firebaseConfig = {
+    apiKey: "AIzaSyB6G4_hwS3-rnnzPEdbJ68ILV4XocJwE70",
+    authDomain: "sajku-f61a3.firebaseapp.com",
+    projectId: "sajku-f61a3",
+    storageBucket: "sajku-f61a3.firebasestorage.app",
+    messagingSenderId: "482528849168",
+    appId: "1:482528849168:web:a1b643f6e4e0d38078c995",
+    measurementId: "G-SVCVMGWFRG"
+  };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
 
-        // Current user data
-        let currentUserData = {};
-        let selectedColor = "#3498db";
-        let currentReviewAppId = null;
-        let currentPlayingAppId = null;
-        const REVIEW_PASSWORD = "sojim@123456789";
+    // ADSTERRA DIRECT LINK
+    const directLinkAdUrl = 'https://www.profitableratecpm.com/psf49k3inz?key=a7d54ab245fb15d43e5e6ef6496941dc';
 
-        // Toggle between login and signup forms
-        showSignup.addEventListener('click', () => {
-            loginForm.style.display = 'none';
-            signupForm.style.display = 'block';
-            loginError.textContent = '';
-        });
-        
-        showLogin.addEventListener('click', () => {
-            signupForm.style.display = 'none';
-            loginForm.style.display = 'block';
-            signupError.textContent = '';
-            signupSuccess.textContent = '';
-        });
-        
-        // Sign Up Function
-        signupBtn.addEventListener('click', () => {
-            const email = signupEmail.value;
-            const password = signupPassword.value;
-            const name = signupName.value;
-            const photoUrl = signupPhoto.value;
-            
-            if (!email || !password || !name) {
-                signupError.textContent = 'Please fill in all required fields';
-                return;
-            }
-            
-            auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    
-                    // Save user data to database
-                    return database.ref('users/' + user.uid).set({
-                        name: name,
-                        email: email,
-                        photoUrl: photoUrl || '',
-                        secureData: '',
-                        secureMedia: {},
-                        profileColor: "#3498db",
-                        createdAt: firebase.database.ServerValue.TIMESTAMP
-                    });
-                })
-                .then(() => {
-                    signupSuccess.textContent = 'Account created successfully!';
-                    signupError.textContent = '';
-                    
-                    // Clear form
-                    signupName.value = '';
-                    signupEmail.value = '';
-                    signupPassword.value = '';
-                    signupPhoto.value = '';
-                    
-                    // Show login form
-                    signupForm.style.display = 'none';
-                    loginForm.style.display = 'block';
-                })
-                .catch((error) => {
-                    signupError.textContent = error.message;
-                });
-        });
-        
-        // Login Function
-        loginBtn.addEventListener('click', () => {
-            const email = loginEmail.value;
-            const password = loginPassword.value;
-            
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // User logged in successfully
-                    loginError.textContent = '';
-                    checkAuthState();
-                })
-                .catch((error) => {
-                    loginError.textContent = error.message;
-                });
-        });
-        
-        // Logout Function
-        logoutBtn.addEventListener('click', () => {
-            auth.signOut().then(() => {
-                homeContainer.style.display = 'none';
-                authContainer.style.display = 'block';
-                loginForm.style.display = 'block';
-                signupForm.style.display = 'none';
-                loginEmail.value = '';
-                loginPassword.value = '';
-            });
-        });
-        
-        // Menu Button Click
-        menuBtn.addEventListener('click', () => {
-            appModal.style.display = 'block';
-        });
-        
-        // Close App Modal
-        closeAppModal.addEventListener('click', () => {
-            appModal.style.display = 'none';
-            appError.textContent = '';
-        });
-        
-        // Submit App
-        submitAppBtn.addEventListener('click', () => {
-            const name = appName.value;
-            const description = appDescription.value;
-            const image = appImage.value;
-            const code = appCode.value;
-            
-            if (!name || !code) {
-                appError.textContent = 'App name and code are required';
-                return;
-            }
-            
-            const userId = auth.currentUser.uid;
-            const newAppKey = database.ref().child('apps').push().key;
-            
-            database.ref('apps/' + newAppKey).set({
-                name: name,
-                description: description || '',
-                image: image || '',
-                code: code,
-                status: 'pending',
-                submittedBy: userId,
-                submittedAt: firebase.database.ServerValue.TIMESTAMP,
-                ratings: {},
-                playCount: 0
-            })
-            .then(() => {
-                appModal.style.display = 'none';
-                appName.value = '';
-                appDescription.value = '';
-                appImage.value = '';
-                appCode.value = '';
-                appError.textContent = '';
-                alert('App submitted for review!');
-            })
-            .catch(error => {
-                appError.textContent = error.message;
-            });
-        });
-        
-        // Lock Button Click - Show Secure Area
-        lockBtn.addEventListener('click', () => {
-            const email = prompt("Enter your email:");
-            const password = prompt("Enter your password:");
-            
-            if (email && password) {
-                const credential = firebase.auth.EmailAuthProvider.credential(email, password);
-                
-                // Reauthenticate user
-                auth.currentUser.reauthenticateWithCredential(credential)
-                    .then(() => {
-                        // Authentication successful - show secure modal
-                        secureModal.style.display = 'block';
-                        
-                        // Load secure data
-                        const userId = auth.currentUser.uid;
-                        database.ref('users/' + userId).once('value')
-                            .then((snapshot) => {
-                                const userData = snapshot.val();
-                                if (userData.secureData) {
-                                    secureTextarea.value = userData.secureData;
-                                }
-                            });
-                    })
-                    .catch((error) => {
-                        alert("Authentication failed: " + error.message);
-                    });
-            }
-        });
-        
-        // Close Secure Modal
-        closeSecure.addEventListener('click', () => {
-            secureModal.style.display = 'none';
-        });
-        
-        // Save Secure Notes
-        saveNotesBtn.addEventListener('click', () => {
-            const userId = auth.currentUser.uid;
-            const data = secureTextarea.value;
-            
-            database.ref('users/' + userId).update({
-                secureData: data
-            }).then(() => {
-                alert('Notes saved securely!');
-            }).catch(error => {
-                alert('Error saving notes: ' + error.message);
-            });
-        });
-        
-        // Profile Button Click
-        profileBtn.addEventListener('click', () => {
-            profileModal.style.display = 'block';
-            editName.value = currentUserData.name || '';
-            editPhoto.value = currentUserData.photoUrl || '';
-            profilePreview.src = currentUserData.photoUrl || 'https://via.placeholder.com/150';
-            
-            // Select current color
-            document.querySelectorAll('.color-option').forEach(option => {
-                option.classList.remove('selected');
-                if (option.dataset.color === currentUserData.profileColor) {
-                    option.classList.add('selected');
-                    selectedColor = option.dataset.color;
-                }
-            });
-        });
-        
-        // Close Profile Modal
-        closeProfileModal.addEventListener('click', () => {
-            profileModal.style.display = 'none';
-        });
-        
-        // Save Profile
-        saveProfileBtn.addEventListener('click', () => {
-            const userId = auth.currentUser.uid;
-            const name = editName.value;
-            const photoUrl = editPhoto.value;
-            
-            if (!name) {
-                alert('Name is required');
-                return;
-            }
-            
-            database.ref('users/' + userId).update({
-                name: name,
-                photoUrl: photoUrl || '',
-                profileColor: selectedColor
-            })
-            .then(() => {
-                // Update UI
-                welcomeName.textContent = name;
-                profileName.textContent = name;
-                profilePic.src = photoUrl || 'https://via.placeholder.com/150';
-                profileModal.style.display = 'none';
-                alert('Profile updated successfully!');
-                
-                // Reload user data
-                checkAuthState();
-            })
-            .catch(error => {
-                alert('Error updating profile: ' + error.message);
-            });
-        });
-        
-        // Color selection
-        colorOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                document.querySelectorAll('.color-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                option.classList.add('selected');
-                selectedColor = option.dataset.color;
-            });
-        });
-        
-        // Tab switching
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const tabId = button.dataset.tab;
-                
-                // Update buttons
-                tabButtons.forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                button.classList.add('active');
-                
-                // Update contents
-                tabContents.forEach(content => {
-                    content.classList.remove('active');
-                });
-                document.getElementById(tabId + 'Tab').classList.add('active');
-                
-                // If review tab is clicked, show password modal
-                if (tabId === 'review') {
-                    reviewPasswordModal.style.display = 'block';
-                    secureModal.style.display = 'none';
-                }
-            });
-        });
-        
-        // Submit Review Password
-        submitReviewPassword.addEventListener('click', () => {
-            if (reviewPassword.value === REVIEW_PASSWORD) {
-                reviewPasswordModal.style.display = 'none';
-                secureModal.style.display = 'block';
-                reviewPasswordError.textContent = '';
-                loadPendingApps();
-            } else {
-                reviewPasswordError.textContent = 'Incorrect review password';
-            }
-        });
-        
-        // Media type change
-        mediaType.addEventListener('change', () => {
-            imagePreview.style.display = 'none';
-            videoPreview.style.display = 'none';
-        });
-        
-        // Media URL input
-        mediaUrl.addEventListener('input', () => {
-            const url = mediaUrl.value;
-            
-            if (mediaType.value === 'image') {
-                imagePreview.src = url;
-                imagePreview.style.display = 'block';
-                videoPreview.style.display = 'none';
-            } else {
-                videoPreview.src = url;
-                videoPreview.style.display = 'block';
-                imagePreview.style.display = 'none';
-            }
-        });
-        
-        // Save Media
-        saveMediaBtn.addEventListener('click', () => {
-            const userId = auth.currentUser.uid;
-            const type = mediaType.value;
-            const url = mediaUrl.value;
-            const caption = mediaCaption.value;
-            
-            if (!url) {
-                alert('Media URL is required');
-                return;
-            }
-            
-            const newMediaKey = database.ref().child('users/' + userId + '/secureMedia').push().key;
-            
-            database.ref('users/' + userId + '/secureMedia/' + newMediaKey).set({
-                type: type,
-                url: url,
-                caption: caption || '',
-                createdAt: firebase.database.ServerValue.TIMESTAMP
-            }).then(() => {
-                alert('Media saved securely!');
-                mediaUrl.value = '';
-                mediaCaption.value = '';
-                imagePreview.style.display = 'none';
-                videoPreview.style.display = 'none';
-            }).catch(error => {
-                alert('Error saving media: ' + error.message);
-            });
-        });
-        
-        // Load pending apps for review
-        function loadPendingApps() {
-            database.ref('apps').orderByChild('status').equalTo('pending').once('value')
-                .then((snapshot) => {
-                    pendingApps.innerHTML = '';
-                    
-                    snapshot.forEach(childSnapshot => {
-                        const app = childSnapshot.val();
-                        const appId = childSnapshot.key;
-                        
-                        const appElement = document.createElement('div');
-                        appElement.className = 'app-card';
-                        appElement.style.border = '1px solid #ddd';
-                        appElement.style.padding = '15px';
-                        appElement.style.marginBottom = '15px';
-                        appElement.style.borderRadius = '8px';
-                        appElement.innerHTML = `
-                            <h3>${app.name}</h3>
-                            <p>${app.description || 'No description'}</p>
-                            ${app.image ? `<img src="${app.image}" style="max-width: 100%; max-height: 150px;">` : ''}
-                            <pre style="max-height: 150px; overflow: auto; background: #f5f5f5; padding: 10px;">${app.code}</pre>
-                            <button class="approve-btn" data-id="${appId}" style="background-color: #2ecc71; color: white; border: none; padding: 8px 15px; border-radius: 5px; margin-right: 10px;">Approve</button>
-                            <button class="reject-btn" data-id="${appId}" style="background-color: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 5px;">Reject</button>
-                        `;
-                        
-                        pendingApps.appendChild(appElement);
-                    });
-                    
-                    // Add event listeners to approve/reject buttons
-                    document.querySelectorAll('.approve-btn').forEach(btn => {
-                        btn.addEventListener('click', function() {
-                            const appId = this.getAttribute('data-id');
-                            database.ref('apps/' + appId).update({
-                                status: 'approved',
-                                reviewedAt: firebase.database.ServerValue.TIMESTAMP
-                            }).then(() => {
-                                alert('App approved!');
-                                loadPendingApps();
-                                loadApprovedApps();
-                            }).catch(error => {
-                                alert('Error approving app: ' + error.message);
-                            });
-                        });
-                    });
-                    
-                    document.querySelectorAll('.reject-btn').forEach(btn => {
-                        btn.addEventListener('click', function() {
-                            const appId = this.getAttribute('data-id');
-                            database.ref('apps/' + appId).update({
-                                status: 'rejected',
-                                reviewedAt: firebase.database.ServerValue.TIMESTAMP
-                            }).then(() => {
-                                alert('App rejected!');
-                                loadPendingApps();
-                            }).catch(error => {
-                                alert('Error rejecting app: ' + error.message);
-                            });
-                        });
-                    });
-                })
-                .catch(error => {
-                    alert('Error loading pending apps: ' + error.message);
-                });
-        }
-        
-        // Load approved apps
-        function loadApprovedApps() {
-            database.ref('apps').orderByChild('status').equalTo('approved').once('value')
-                .then((snapshot) => {
-                    appsDisplay.innerHTML = '';
-                    
-                    snapshot.forEach(childSnapshot => {
-                        const app = childSnapshot.val();
-                        const appId = childSnapshot.key;
-                        
-                        const appElement = document.createElement('div');
-                        appElement.className = 'app-item';
-                        appElement.setAttribute('data-id', appId);
-                        
-                        // Calculate average rating
-                        let totalRating = 0;
-                        let ratingCount = 0;
-                        if (app.ratings) {
-                            Object.values(app.ratings).forEach(rating => {
-                                totalRating += rating;
-                                ratingCount++;
-                            });
-                        }
-                        const avgRating = ratingCount > 0 ? (totalRating / ratingCount).toFixed(1) : 'Not rated';
-                        
-                        appElement.innerHTML = `
-                            <h3>${app.name}</h3>
-                            <p>${app.description || 'No description'}</p>
-                            ${app.image ? `<img src="${app.image}">` : ''}
-                            <div class="app-meta">
-                                <div class="stars">${generateStarRating(avgRating)}</div>
-                                <div>${app.playCount || 0} plays</div>
-                            </div>
-                        `;
-                        
-                        appsDisplay.appendChild(appElement);
-                        
-                        // Add click event to play app
-                        appElement.addEventListener('click', () => {
-                            playApp(appId, app);
-                        });
-                    });
-                })
-                .catch(error => {
-                    alert('Error loading approved apps: ' + error.message);
-                });
-        }
-        
-        // Generate star rating display
-        function generateStarRating(rating) {
-            if (rating === 'Not rated') return rating;
-            
-            const fullStars = Math.floor(rating);
-            const halfStar = rating % 1 >= 0.5 ? 1 : 0;
-            const emptyStars = 5 - fullStars - halfStar;
-            
-            return '★'.repeat(fullStars) + '½'.repeat(halfStar) + '☆'.repeat(emptyStars) + ` (${rating})`;
-        }
-        
-        // Play app
-        function playApp(appId, app) {
-            currentPlayingAppId = appId;
-            playAppName.textContent = app.name;
-            
-            // Increment play count
-            database.ref('apps/' + appId).transaction(app => {
-                if (app) {
-                    app.playCount = (app.playCount || 0) + 1;
-                }
-                return app;
-            });
-            
-            // Display app in iframe
-            const blob = new Blob([app.code], {type: 'text/html'});
-            const url = URL.createObjectURL(blob);
-            appPlayFrame.src = url;
-            
-            appPlayModal.style.display = 'block';
-        }
-        
-        // Close App Play Modal
-        closeAppPlayModal.addEventListener('click', () => {
-            appPlayModal.style.display = 'none';
-        });
-        
-        closeAppPlayBtn.addEventListener('click', () => {
-            appPlayModal.style.display = 'none';
-        });
-        
-        // Rate App
-        rateAppBtn.addEventListener('click', () => {
-            if (!currentPlayingAppId) return;
-            
-            const rating = prompt("Rate this app (1-5 stars):");
-            if (rating && rating >= 1 && rating <= 5) {
-                const userId = auth.currentUser.uid;
-                database.ref('apps/' + currentPlayingAppId + '/ratings/' + userId).set(Number(rating))
-                    .then(() => {
-                        alert('Thank you for rating!');
-                        loadApprovedApps();
-                    })
-                    .catch(error => {
-                        alert('Error submitting rating: ' + error.message);
-                    });
-            } else {
-                alert('Please enter a rating between 1 and 5');
-            }
-        });
-        
-        // Check auth state
-        function checkAuthState() {
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    // User is signed in
-                    authContainer.style.display = 'none';
-                    homeContainer.style.display = 'block';
-                    
-                    // Get user data from database
-                    database.ref('users/' + user.uid).once('value')
-                        .then((snapshot) => {
-                            currentUserData = snapshot.val();
-                            welcomeName.textContent = currentUserData.name;
-                            profileName.textContent = currentUserData.name;
-                            profilePic.src = currentUserData.photoUrl || 'https://via.placeholder.com/150';
-                            
-                            // Load approved apps
-                            loadApprovedApps();
-                            
-                            // Apply profile color
-                            if (currentUserData.profileColor) {
-                                document.documentElement.style.setProperty('--primary-color', currentUserData.profileColor);
-                            }
-                        })
-                        .catch(error => {
-                            alert('Error loading user data: ' + error.message);
-                        });
+    // DOM REFERENCES
+    const authContainer = document.getElementById('auth-container');
+    const appContainer = document.getElementById('app-container');
+    const profileModal = document.getElementById('profile-modal');
+    const createPostModal = document.getElementById('create-post-modal');
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const showSignupLink = document.getElementById('show-signup');
+    const showLoginLink = document.getElementById('show-login');
+    const loginContainer = document.getElementById('login-container');
+    const signupContainer = document.getElementById('signup-container');
+    const headerUserName = document.getElementById('header-user-name');
+    const headerUserPhoto = document.getElementById('header-user-photo');
+    const profileIconContainer = document.getElementById('profile-icon-container');
+    const modalUserName = document.getElementById('modal-user-name');
+    const modalUserPhoto = document.getElementById('modal-user-photo');
+    const postCountElement = document.getElementById('post-count');
+    const logoutBtn = document.getElementById('logout-btn');
+    const editProfileBtn = document.getElementById('edit-profile-btn');
+    const editProfileFormContainer = document.getElementById('edit-profile-form-container');
+    const editProfileForm = document.getElementById('edit-profile-form');
+    const createPostFab = document.getElementById('create-post-fab');
+    const createPostForm = document.getElementById('create-post-form');
+    const publicFeedContainer = document.getElementById('public-feed-container');
+    const userPostsContainer = document.getElementById('user-posts-container');
+    const languageSwitcher = document.getElementById('language-switcher');
+    const chatFab = document.getElementById('chat-fab');
+    const chatModal = document.getElementById('chat-modal');
+    const chatForm = document.getElementById('chat-form');
+    const chatMessageInput = document.getElementById('chat-message-input');
+    const chatMessagesContainer = document.getElementById('chat-messages-container');
+    const imageViewerModal = document.getElementById('image-viewer-modal');
+    const fullscreenImage = document.getElementById('fullscreen-image');
+    const commentsModal = document.getElementById('comments-modal');
+    const commentsListContainer = document.getElementById('comments-list-container');
+    const addCommentForm = document.getElementById('add-comment-form');
+    const showUsersListBtn = document.getElementById('show-users-list-btn');
+    const usersListModal = document.getElementById('users-list-modal');
+    const usersListContainer = document.getElementById('users-list-container');
+    const privateChatModal = document.getElementById('private-chat-modal');
+    const privateChatUserInfo = document.getElementById('private-chat-user-info');
+    const privateChatMessagesContainer = document.getElementById('private-chat-messages-container');
+    const privateChatForm = document.getElementById('private-chat-form');
+    const privateChatActions = document.getElementById('private-chat-actions');
+    const callModal = document.getElementById('call-modal');
+    const callUserPhoto = document.getElementById('call-user-photo');
+    const callUserName = document.getElementById('call-user-name');
+    const callStatus = document.getElementById('call-status');
+    const endCallBtn = document.getElementById('end-call-btn');
+    const showBusinessDashboardBtn = document.getElementById('show-business-dashboard-btn');
+    const businessDashboardModal = document.getElementById('business-dashboard-modal');
+    const businessDashboardMainContent = document.getElementById('business-dashboard-main-content');
+    const editBusinessProfileBtn = document.getElementById('edit-business-profile-btn');
+    const createBusinessProfileModal = document.getElementById('create-business-profile-modal');
+    const createBusinessProfileForm = document.getElementById('create-business-profile-form');
+    const addProductFab = document.getElementById('add-product-fab');
+    const addProductModal = document.getElementById('add-product-modal');
+    const addProductForm = document.getElementById('add-product-form');
+    const productDetailModal = document.getElementById('product-detail-modal');
+    const productDetailContent = document.getElementById('product-detail-content');
+    let currentUserData = null; 
+    let currentBusinessProfile = null;
+    let productsUnsubscribe = null;
+    let privateChatUnsubscribe = null;
+    let commentsUnsubscribe = null;
+    
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            updateUserPresence(user.uid, 'online');
+            authContainer.style.display = 'none';
+            appContainer.style.display = 'block';
+            db.collection('users').doc(user.uid).get().then(doc => {
+                if (!doc.exists) {
+                    const newProfile = { name: user.displayName || user.email.split('@')[0], email: user.email, photoURL: user.photoURL || 'https://i.stack.imgur.com/34AD2.jpg', presence: 'online', last_seen: firebase.firestore.FieldValue.serverTimestamp() };
+                    db.collection('users').doc(user.uid).set(newProfile).then(() => initializeApp(user.uid));
                 } else {
-                    // User is signed out
-                    homeContainer.style.display = 'none';
-                    authContainer.style.display = 'block';
+                    initializeApp(user.uid);
                 }
             });
+        } else {
+            authContainer.style.display = 'flex';
+            appContainer.style.display = 'none';
+            closeAllModals();
+            currentUserData = null;
         }
-        
-        // Initialize app
-        checkAuthState();
+    });
+    async function updateUserPresence(uid, status) { if (!uid) return; try { const userRef = db.collection('users').doc(uid); await userRef.update({ presence: status, last_seen: firebase.firestore.FieldValue.serverTimestamp() }); } catch (error) { console.error("Error updating presence:", error); } }
+    window.addEventListener('beforeunload', () => { if (auth.currentUser) { updateUserPresence(auth.currentUser.uid, 'offline'); } });
+    
+    logoutBtn.addEventListener('click', async () => {
+        window.open(directLinkAdUrl, '_blank');
+        if(auth.currentUser) {
+            await updateUserPresence(auth.currentUser.uid, 'offline');
+        }
+        auth.signOut();
+    });
+    
+    signupForm.addEventListener('submit', (e) => { e.preventDefault(); const name = document.getElementById('signup-name').value; const photoURL = document.getElementById('signup-photo').value; const email = document.getElementById('signup-email').value; const password = document.getElementById('signup-password').value; auth.createUserWithEmailAndPassword(email, password).then(userCredential => { db.collection('users').doc(userCredential.user.uid).set({ name: name, photoURL: photoURL, email: email, presence: 'online', last_seen: firebase.firestore.FieldValue.serverTimestamp() }).then(() => signupForm.reset()); }).catch(error => alert("Error signing up: " + error.message)); });
+    loginForm.addEventListener('submit', (e) => { e.preventDefault(); const email = document.getElementById('login-email').value; const password = document.getElementById('login-password').value; auth.signInWithEmailAndPassword(email, password).then(() => loginForm.reset()).catch(error => alert("Error logging in: " + error.message)); });
+
+    function initializeApp(uid) {
+        fetchUserData(uid);
+        fetchPublicFeed();
+        fetchChatMessages();
+    } 
+    function fetchUserData(uid) { db.collection('users').doc(uid).onSnapshot(doc => { if (doc.exists) { currentUserData = { uid: doc.id, ...doc.data() }; headerUserName.textContent = currentUserData.name; headerUserPhoto.src = currentUserData.photoURL; modalUserName.textContent = currentUserData.name; modalUserPhoto.src = currentUserData.photoURL; document.getElementById('edit-name').placeholder = currentUserData.name; document.getElementById('edit-photo').placeholder = currentUserData.photoURL; document.getElementById('edit-name').value = currentUserData.name; document.getElementById('edit-photo').value = currentUserData.photoURL; } }, error => { console.error("Error fetching user data:", error); }); }
+    
+    function closeAllModals() { 
+        document.querySelectorAll('.modal').forEach(modal => modal.classList.remove('show')); 
+        addProductFab.style.display = 'none';
+        if (privateChatUnsubscribe) { privateChatUnsubscribe(); privateChatUnsubscribe = null; }
+        if (commentsUnsubscribe) { commentsUnsubscribe(); commentsUnsubscribe = null; }
+        if (productsUnsubscribe) { productsUnsubscribe(); productsUnsubscribe = null; }
+    }
+    document.querySelectorAll('.close-modal-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const targetModal = e.target.closest('.modal');
+            if(targetModal) {
+                 targetModal.classList.remove('show');
+                 if(targetModal.id === 'business-dashboard-modal') {
+                     addProductFab.style.display = 'none';
+                     if(productsUnsubscribe) { productsUnsubscribe(); productsUnsubscribe = null; }
+                 }
+                 if (targetModal.id === 'private-chat-modal' && privateChatUnsubscribe) { privateChatUnsubscribe(); privateChatUnsubscribe = null; }
+                 if (targetModal.id === 'comments-modal' && commentsUnsubscribe) { commentsUnsubscribe(); commentsUnsubscribe = null; }
+            }
+        });
+    });
+    
+    showSignupLink.addEventListener('click', (e) => { e.preventDefault(); loginContainer.style.display = 'none'; signupContainer.style.display = 'block'; });
+    showLoginLink.addEventListener('click', (e) => { e.preventDefault(); signupContainer.style.display = 'none'; loginContainer.style.display = 'block'; });
+    profileIconContainer.addEventListener('click', () => { if (auth.currentUser) { fetchUserPosts(auth.currentUser.uid); profileModal.classList.add('show'); } });
+    createPostFab.addEventListener('click', () => { createPostModal.classList.add('show'); });
+    chatFab.addEventListener('click', () => { chatModal.classList.add('show'); });
+    editProfileBtn.addEventListener('click', () => { editProfileFormContainer.style.display = editProfileFormContainer.style.display === 'none' ? 'block' : 'none'; });
+
+    showBusinessDashboardBtn.addEventListener('click', () => {
+        if (!currentUserData) return;
+        businessDashboardModal.classList.add('show');
+        loadBusinessProfile();
+    });
+    async function loadBusinessProfile() {
+        if (!currentUserData) return;
+        businessDashboardMainContent.innerHTML = `<p style="text-align:center; padding: 2rem;">Loading Profile...</p>`;
+
+        const profileRef = db.collection('businessProfiles').doc(currentUserData.uid);
+        const doc = await profileRef.get();
+
+        if (doc.exists) {
+            currentBusinessProfile = { id: doc.id, ...doc.data() };
+            renderBusinessProfile(currentBusinessProfile);
+            listenForProducts();
+            addProductFab.style.display = 'flex'; 
+            editBusinessProfileBtn.style.display = 'block';
+        } else {
+            currentBusinessProfile = null;
+            addProductFab.style.display = 'none'; 
+            editBusinessProfileBtn.style.display = 'none';
+            businessDashboardMainContent.innerHTML = `
+                <div id="no-business-profile-msg">
+                    <h3>Welcome to Your Business Store!</h3>
+                    <p>You haven't created your business profile yet.</p>
+                    <p>To list your products or services, please create your profile first.</p>
+                    <button id="create-business-profile-prompt-btn" style="padding: 0.8rem 1.5rem; font-size: 1rem; width: auto; display: inline-block; background-color:var(--primary-color); color:white; border:none; border-radius:4px; cursor:pointer;">Create My Business Profile</button>
+                </div>`;
+            document.getElementById('create-business-profile-prompt-btn').addEventListener('click', () => {
+                createBusinessProfileForm.reset();
+                createBusinessProfileModal.querySelector('h3').textContent = "Create Your Business Profile";
+                createBusinessProfileModal.querySelector('button[type="submit"]').textContent = "Create and Save Profile";
+                createBusinessProfileModal.classList.add('show');
+            });
+        }
+    } 
+    
+    function renderBusinessProfile(profile) {
+        businessDashboardMainContent.innerHTML = `
+            <div class="business-profile-card">
+                <img id="business-profile-photo" src="${profile.photoURL || 'https://via.placeholder.com/100'}" alt="Business Photo">
+                <h2 id="business-profile-name">${profile.businessName || 'Business Name'}</h2>
+                <p id="business-profile-about">${profile.about || 'Business description and address.'}</p>
+                <div class="business-contact-info">
+                    ${profile.phone ? `<span><i class="fas fa-phone-alt"></i> ${profile.phone}</span>` : ''}
+                    ${profile.email ? `<span><i class="fas fa-envelope"></i> ${profile.email}</span>` : ''}
+                </div>
+                 <div class="disclaimer-box">
+                    <p><strong>Disclaimer:</strong> This is a promotional page. For any purchase, please contact the seller directly using the details provided. The app is not responsible for any transactions.</p>
+                </div>
+            </div>
+            <h3 style="padding: 0 0.5rem;">My Products & Services</h3>
+            <div id="products-grid"><p style="text-align:center;">Loading products...</p></div>
+        `;
+    }
+
+    function listenForProducts() {
+        if (productsUnsubscribe) productsUnsubscribe(); 
+
+        const productsRef = db.collection('businessProfiles').doc(currentUserData.uid).collection('products').orderBy('createdAt', 'desc');
+        productsUnsubscribe = productsRef.onSnapshot(snapshot => {
+            const productsGrid = document.getElementById('products-grid');
+            if (!productsGrid) return;
+
+            productsGrid.innerHTML = '';
+            if (snapshot.empty) {
+                productsGrid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--grey-color);">You haven't added any products yet. Use the '+' button below to add one.</p>`;
+                return;
+            }
+
+            snapshot.forEach(doc => {
+                const product = { id: doc.id, ...doc.data() };
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.dataset.productId = product.id; 
+                productCard.innerHTML = `
+                    <img src="${product.imageUrl || 'https://via.placeholder.com/150'}" alt="${product.name}">
+                    <div class="product-card-info">
+                        <h5>${product.name}</h5>
+                        <p>${product.price || ''}</p>
+                    </div>
+                    <button class="delete-btn delete-product-btn" data-product-id="${product.id}" title="Delete Product"><i class="fas fa-trash"></i></button>
+                `;
+                productsGrid.appendChild(productCard);
+            }); }, error => {
+            console.error("Error listening for products:", error);
+            document.getElementById('products-grid').innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--red-color);">Error loading products.</p>`;
+        });
+    }
+
+    editBusinessProfileBtn.addEventListener('click', () => {
+        if(currentBusinessProfile) {
+            const form = createBusinessProfileForm;
+            form.querySelector('#business-name-input').value = currentBusinessProfile.businessName || '';
+            form.querySelector('#business-photo-input').value = currentBusinessProfile.photoURL || '';
+            form.querySelector('#business-phone-input').value = currentBusinessProfile.phone || '';
+            form.querySelector('#business-email-input').value = currentBusinessProfile.email || '';
+            form.querySelector('#business-about-input').value = currentBusinessProfile.about || '';
+            createBusinessProfileModal.querySelector('h3').textContent = "Edit Your Business Profile";
+            createBusinessProfileModal.querySelector('button[type="submit"]').textContent = "Save Changes";
+            createBusinessProfileModal.classList.add('show');
+        }
+    });
+
+    createBusinessProfileForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const profileData = {
+            businessName: form.querySelector('#business-name-input').value,
+            photoURL: form.querySelector('#business-photo-input').value,
+            phone: form.querySelector('#business-phone-input').value,
+            email: form.querySelector('#business-email-input').value,
+            about: form.querySelector('#business-about-input').value,
+            ownerId: currentUserData.uid,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        const saveButton = form.querySelector('button');
+        saveButton.disabled = true;
+        saveButton.textContent = 'Saving...';
+        try {
+            await db.collection('businessProfiles').doc(currentUserData.uid).set(profileData, { merge: true });
+            createBusinessProfileModal.classList.remove('show');
+            loadBusinessProfile(); 
+        } catch (error) {
+            console.error("Error saving business profile:", error);
+            alert("Profile could not be saved. Please try again.");
+        } finally {
+            saveButton.disabled = false;
+            saveButton.textContent = currentBusinessProfile ? 'Save Changes' : 'Create and Save Profile';
+        }
+    });
+
+    addProductFab.addEventListener('click', () => {
+        addProductForm.reset();
+        addProductModal.classList.add('show');
+    });
+
+    addProductForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const productData = {
+            name: document.getElementById('product-name-input').value,
+            price: document.getElementById('product-price-input').value,
+            detail: document.getElementById('product-detail-input').value,
+            imageUrl: document.getElementById('product-image-url-input').value,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            likes: [],
+            comments: []
+        };
+        const addButton = addProductForm.querySelector('button');
+        addButton.disabled = true;
+        addButton.textContent = 'Adding...';
+        try {
+            await db.collection('businessProfiles').doc(currentUserData.uid).collection('products').add(productData);
+            addProductModal.classList.remove('show');
+        } catch (error) {
+            console.error("Error adding product:", error);
+            alert("Product could not be added. Please try again.");
+        } finally {
+            addButton.disabled = false;
+            addButton.textContent = 'Add Product';
+        }
+    });
+
+    businessDashboardMainContent.addEventListener('click', (e) => {
+        const deleteButton = e.target.closest('.delete-product-btn');
+        const productCard = e.target.closest('.product-card');
+
+        if (deleteButton) {
+            e.stopPropagation(); 
+            const productId = deleteButton.dataset.productId;
+            if (confirm("Are you sure you want to delete this product?")) {
+                db.collection('businessProfiles').doc(currentUserData.uid).collection('products').doc(productId).delete()
+                  .catch(error => {
+                      console.error("Error deleting product: ", error);
+                      alert("Product could not be deleted.");
+                  });
+            }
+        } else if (productCard) {
+            const productId = productCard.dataset.productId;
+            showProductDetails(currentUserData.uid, productId);
+        }
+    });
+
+    async function showProductDetails(ownerId, productId) {
+        productDetailContent.innerHTML = '<p style="text-align:center; padding: 2rem;">Loading product details...</p>';
+        productDetailModal.classList.add('show');
+        productDetailModal.dataset.ownerId = ownerId;
+        productDetailModal.dataset.productId = productId;
+        try {
+            const productRef = db.collection('businessProfiles').doc(ownerId).collection('products').doc(productId);
+            const ownerProfileRef = db.collection('businessProfiles').doc(ownerId);
+            
+            const [productDoc, ownerDoc] = await Promise.all([productRef.get(), ownerProfileRef.get()]);
+
+            if (!productDoc.exists || !ownerDoc.exists) {
+                productDetailContent.innerHTML = '<p style="text-align:center; padding: 2rem;">Sorry, this product or seller could not be found.</p>';
+                return;
+            }
+            const product = {id: productDoc.id, ...productDoc.data()};
+            const ownerProfile = ownerDoc.data();
+            const isLiked = currentUserData && product.likes && product.likes.includes(currentUserData.uid);
+            
+            productRef.onSnapshot(doc => {
+                if (!doc.exists) return;
+                const updatedProduct = doc.data();
+                if (!updatedProduct) return;
+                const likesCount = updatedProduct.likes ? updatedProduct.likes.length : 0;
+                const commentsCount = updatedProduct.comments ? updatedProduct.comments.length : 0;
+                const newIsLiked = currentUserData && updatedProduct.likes && updatedProduct.likes.includes(currentUserData.uid);
+                const likesCountEl = productDetailContent.querySelector('.likes-count');
+                const commentsCountEl = productDetailContent.querySelector('.comments-count');
+                const likeBtnEl = productDetailContent.querySelector('.like-btn');
+                if (likesCountEl) likesCountEl.textContent = `${likesCount} Likes`;
+                if (commentsCountEl) commentsCountEl.textContent = `${commentsCount} Comments`;
+                if(likeBtnEl) likeBtnEl.classList.toggle('liked', newIsLiked);
+            });
+            
+            productDetailContent.innerHTML = `
+                <!-- BANNER AD: PRODUCT DETAIL TOP -->
+                <div class="banner-ad-container">
+                    <script type="text/javascript">
+                        atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+                    <\/script>
+                    <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"><\/script>
+                </div>
+                <img src="${product.imageUrl}" class="product-image" alt="${product.name}">
+                <div class="product-detail-body">
+                    <h2>${product.name}</h2>
+                    <p class="price">${product.price}</p>
+                    <div class="post-stats"><span class="likes-count"></span><span class="comments-count"></span></div>
+                    <div class="post-actions">
+                         <button class="like-btn ${isLiked ? 'liked' : ''}"><i class="fa-solid fa-thumbs-up"></i> <span>Like</span></button>
+                         <button class="comment-btn"><i class="fa-solid fa-comment"></i> <span>Comment</span></button>
+                         <button class="share-btn"><i class="fa-solid fa-share"></i> <span>Share</span></button>
+                    </div>
+                    <p class="details">${product.detail}</p>
+                    <hr>
+                    <div class="seller-info-card">
+                        <h4>Contact Seller</h4>
+                        <div class="business-contact-info">
+                            <span><i class="fas fa-store"></i> <strong>${ownerProfile.businessName}</strong></span>
+                            ${ownerProfile.phone ? `<span><i class="fas fa-phone-alt"></i><a href="tel:${ownerProfile.phone}">${ownerProfile.phone}</a></span>` : ''}
+                            ${ownerProfile.email ? `<span><i class="fas fa-envelope"></i><a href="mailto:${ownerProfile.email}">${ownerProfile.email}</a></span>` : ''}
+                            <span style="white-space: pre-wrap; align-items: flex-start;"><i class="fas fa-map-marker-alt"></i> ${ownerProfile.about}</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- BANNER AD: PRODUCT DETAIL BOTTOM -->
+                <div class="banner-ad-container">
+                    <script type="text/javascript">
+                        atOptions = { 'key' : '450ce8d1749a1a9bb98bee51d283a2c6', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+                    <\/script>
+                    <script type="text/javascript" src="//www.highperformanceformat.com/450ce8d1749a1a9bb98bee51d283a2c6/invoke.js"><\/script>
+                </div>
+            `;
+        } catch (error) {
+            console.error("Error fetching product details:", error);
+            productDetailContent.innerHTML = '<p style="text-align:center; padding: 2rem;">Error loading details. Please try again.</p>';
+        }
+    }
+    
+    productDetailModal.addEventListener('click', (e) => {
+        const { ownerId, productId } = productDetailModal.dataset;
+        if(!ownerId || !productId) return;
+        const likeBtn = e.target.closest('.like-btn');
+        const commentBtn = e.target.closest('.comment-btn');
+        const shareBtn = e.target.closest('.share-btn');
+        const image = e.target.closest('.product-image');
+        if (likeBtn) { toggleItemLike({ type: 'product', id: productId, ownerId: ownerId }); }
+        if (commentBtn) { openCommentsFor({ type: 'product', id: productId, ownerId: ownerId }); }
+        if (shareBtn) { shareItem({title: 'Check out this product!', text: 'Found this in my Colony App'}); }
+        if (image) { fullscreenImage.src = image.src; imageViewerModal.classList.add('show'); }
+    });
+
+    function toggleItemLike(context) {
+        if (!currentUserData) { alert("Please login to like this."); return; }
+        let itemRef;
+        if (context.type === 'post') {
+            itemRef = db.collection('posts').doc(context.id);
+        } else if (context.type === 'product') {
+            itemRef = db.collection('businessProfiles').doc(context.ownerId).collection('products').doc(context.id);
+        } else { return; }
+        db.runTransaction(async (transaction) => {
+            const itemDoc = await transaction.get(itemRef);
+            if (!itemDoc.exists) throw "Item does not exist!";
+            const data = itemDoc.data();
+            const likes = data.likes || [];
+            const uid = currentUserData.uid;
+            if (likes.includes(uid)) {
+                transaction.update(itemRef, { likes: firebase.firestore.FieldValue.arrayRemove(uid) });
+            } else {
+                transaction.update(itemRef, { likes: firebase.firestore.FieldValue.arrayUnion(uid) });
+            }
+        }).catch(error => { console.error("Like transaction failed: ", error); });
+    }
+
+    async function shareItem(shareData) {
+        const data = { title: shareData.title || 'Check this out!', text: shareData.text || 'Shared from My Colony App', url: window.location.href };
+        try {
+            if (navigator.share) { await navigator.share(data); } else { alert('Web Share API not supported in your browser.'); }
+        } catch (err) { console.error('Error sharing:', err); }
+    }
+    
+    function openCommentsFor(context) {
+        commentsModal.dataset.context = JSON.stringify(context);
+        commentsListContainer.innerHTML = '<p>Loading comments...</p>';
+        addCommentForm.reset();
+        commentsModal.classList.add('show');
+        if (commentsUnsubscribe) commentsUnsubscribe();
+        let docRef;
+        if (context.type === 'post') {
+            docRef = db.collection('posts').doc(context.id);
+        } else if (context.type === 'product') {
+            docRef = db.collection('businessProfiles').doc(context.ownerId).collection('products').doc(context.id);
+        } else { return; }
+        commentsUnsubscribe = docRef.onSnapshot(doc => {
+            if (!doc.exists) { commentsListContainer.innerHTML = '<p>This item no longer exists.</p>'; return; }
+            const data = doc.data(); const comments = data.comments || [];
+            commentsListContainer.innerHTML = '';
+            if (comments.length === 0) {
+                commentsListContainer.innerHTML = '<p style="text-align:center; color: var(--grey-color);">No comments yet. Be the first to comment!</p>';
+                return;
+            }
+            comments.sort((a, b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+            comments.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.classList.add('comment-entry');
+                commentElement.innerHTML = `<img src="${comment.userPhotoURL || 'https://i.stack.imgur.com/34AD2.jpg'}" alt="${comment.userName}"><div class="comment-text-content"><strong>${comment.userName}</strong><p>${comment.text.replace(/</g, "<").replace(/>/g, ">")}</p></div>`;
+                commentsListContainer.appendChild(commentElement);
+            });
+            commentsListContainer.scrollTop = commentsListContainer.scrollHeight;
+        });
+    }
+
+    addCommentForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const context = JSON.parse(commentsModal.dataset.context || '{}');
+        const commentInput = document.getElementById('comment-input');
+        const commentText = commentInput.value.trim();
+        if (!commentText || !context.id || !currentUserData) return;
+        const commentData = { userId: currentUserData.uid, userName: currentUserData.name, userPhotoURL: currentUserData.photoURL, text: commentText, createdAt: firebase.firestore.Timestamp.now() };
+        let docRef;
+        if (context.type === 'post') {
+            docRef = db.collection('posts').doc(context.id);
+        } else if (context.type === 'product') {
+            docRef = db.collection('businessProfiles').doc(context.ownerId).collection('products').doc(context.id);
+        } else { return; }
+        try {
+            await docRef.update({ comments: firebase.firestore.FieldValue.arrayUnion(commentData) });
+            commentInput.value = '';
+        } catch (error) { console.error("Error adding comment: ", error); alert("Could not add comment. Please try again."); }
+    });
+
+    createPostForm.addEventListener('submit', async (e) => { e.preventDefault(); const text = document.getElementById('post-text').value; const imageUrl = document.getElementById('post-image-url').value.trim(); const postButton = e.target.querySelector('button[type="submit"]'); if (!text && !imageUrl) { alert("Please write something or provide an image URL."); return; } postButton.disabled = true; postButton.textContent = "Posting..."; try { await db.collection('posts').add({ userId: currentUserData.uid, authorName: currentUserData.name, authorPhotoURL: currentUserData.photoURL, text: text, imageUrl: imageUrl, createdAt: firebase.firestore.FieldValue.serverTimestamp(), likes: [], comments: [] }); createPostForm.reset(); createPostModal.classList.remove('show'); } catch (error) { alert("Error creating post: " + error.message); } finally { postButton.disabled = false; postButton.textContent = "Post"; } });
+    function fetchPublicFeed() { publicFeedContainer.innerHTML = `<p>Loading...</p>`; db.collection('posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => { publicFeedContainer.innerHTML = ''; if (snapshot.empty) { publicFeedContainer.innerHTML = `<p>No posts found...</p>`; return; } snapshot.forEach(doc => { publicFeedContainer.appendChild(createPostElement({ id: doc.id, ...doc.data() })); }); }, error => { console.error(error); publicFeedContainer.innerHTML = `<p>Error loading feed.</p>`; }); }
+    function fetchUserPosts(uid) { userPostsContainer.innerHTML = `<p>Loading...</p>`; db.collection('posts').where('userId', '==', uid).orderBy('createdAt', 'desc').onSnapshot(snapshot => { userPostsContainer.innerHTML = ''; postCountElement.textContent = snapshot.size; if (snapshot.empty) { userPostsContainer.innerHTML = '<p>You have not created any posts yet.</p>'; return; } snapshot.forEach(doc => { userPostsContainer.appendChild(createPostElement({ id: doc.id, ...doc.data() }, true)); }); }); }
+    
+    function createPostElement(post, isProfileView = false) {
+        const postElement = document.createElement('div'); postElement.classList.add('post-card'); postElement.setAttribute('data-post-id', post.id);
+        const time = post.createdAt ? post.createdAt.toDate().toLocaleString() : 'Just now';
+        const imageHtml = post.imageUrl ? `<img src="${post.imageUrl}" alt="Post Image" class="post-image-clickable">` : '';
+        let actionsHtml = `<button class="like-btn"><i class="fa-solid fa-thumbs-up"></i> <span>Like</span></button> <button class="comment-btn"><i class="fa-solid fa-comment"></i> <span>Comment</span></button> <button class="share-btn"><i class="fa-solid fa-share"></i> <span>Share</span></button>`;
+        if (isProfileView) { actionsHtml = `<button class="delete-btn" style="background-color:var(--red-color);color:white;width:100%;"><i class="fa-solid fa-trash"></i> <span>Delete</span></button>`; }
+        postElement.innerHTML = ` <div class="post-header"> <img src="${post.authorPhotoURL || 'placeholder.png'}" alt="${post.authorName}"> <div class="post-author-info"> <strong>${post.authorName}</strong> <small>${time}</small> </div> </div> <div class="post-content"> <p>${post.text.replace(/</g, "<").replace(/>/g, ">")}</p> ${imageHtml} </div> <div class="post-stats"> <span class="likes-count"></span> <span class="comments-count"></span> </div> <div class="post-actions"> ${actionsHtml} </div> `;
+        db.collection('posts').doc(post.id).onSnapshot(doc => {
+            if(doc.exists) {
+                const updatedPost = doc.data();
+                const likesCount = updatedPost.likes ? updatedPost.likes.length : 0;
+                const commentsCount = updatedPost.comments ? updatedPost.comments.length : 0;
+                const isLiked = currentUserData && updatedPost.likes && updatedPost.likes.includes(currentUserData.uid);
+                const likesCountEl = postElement.querySelector('.likes-count');
+                const commentsCountEl = postElement.querySelector('.comments-count');
+                const likeBtnEl = postElement.querySelector('.like-btn');
+                if(likesCountEl) likesCountEl.textContent = `${likesCount} Likes`;
+                if(commentsCountEl) commentsCountEl.textContent = `${commentsCount} Comments`;
+                if(likeBtnEl) likeBtnEl.classList.toggle('liked', isLiked);
+            }
+        });
+        return postElement;
+    }
+    document.body.addEventListener('click', (e) => {
+        const postCard = e.target.closest('.post-card');
+        if (!postCard) return;
+        const postId = postCard.dataset.postId;
+        const likeBtn = e.target.closest('.like-btn');
+        const commentBtn = e.target.closest('.comment-btn');
+        const shareBtn = e.target.closest('.share-btn'); 
+        const deleteBtn = e.target.closest('.delete-btn'); 
+        const clickableImage = e.target.closest('.post-image-clickable');
+        if (likeBtn) toggleItemLike({type: 'post', id: postId});
+        if (commentBtn) openCommentsFor({ type: 'post', id: postId });
+        if (shareBtn) shareItem({title: 'Check out this post!', text: 'Shared from My Colony App'});
+        if (deleteBtn) { if (confirm("Are you sure you want to delete this post?")) { db.collection('posts').doc(postId).delete(); } }
+        if (clickableImage) { fullscreenImage.src = clickableImage.src; imageViewerModal.classList.add('show'); }
+    });
+
+    chatForm.addEventListener('submit', (e) => { e.preventDefault(); const messageText = chatMessageInput.value.trim(); if (messageText && currentUserData) { db.collection('chatMessages').add({ text: messageText, userId: currentUserData.uid, userName: currentUserData.name, userPhotoURL: currentUserData.photoURL, createdAt: firebase.firestore.FieldValue.serverTimestamp() }); chatMessageInput.value = ''; }});
+    function fetchAllUsers() { usersListContainer.innerHTML = `<p>Loading users...</p>`; db.collection('users').onSnapshot(snapshot => { if (snapshot.empty) { usersListContainer.innerHTML = '<p>No other users found.</p>'; return; } usersListContainer.innerHTML = ''; snapshot.forEach(doc => { const user = { id: doc.id, ...doc.data() }; if (user.id === auth.currentUser.uid) return; const userElement = document.createElement('div'); userElement.classList.add('user-list-entry'); userElement.dataset.uid = user.id; userElement.dataset.name = user.name; userElement.dataset.photo = user.photoURL; const isOnline = user.presence === 'online'; userElement.innerHTML = `<img src="${user.photoURL || 'https://i.stack.imgur.com/34AD2.jpg'}" alt="${user.name}"><div class="user-info-and-status"><strong>${user.name}</strong><div class="user-presence"><div class="presence-indicator ${isOnline ? 'online' : 'offline'}"></div><span>${isOnline ? 'Online' : 'Offline'}</span></div></div>`; userElement.addEventListener('click', () => openPrivateChat(user.id, user.name, user.photoURL)); usersListContainer.appendChild(userElement); }); }); }
+    showUsersListBtn.addEventListener('click', () => { usersListModal.classList.add('show'); fetchAllUsers(); });
+    function openPrivateChat(targetUid, targetName, targetPhoto) { usersListModal.classList.remove('show'); privateChatModal.classList.add('show'); const chatHeaderPhoto = privateChatUserInfo.querySelector('img'); const chatHeaderName = privateChatUserInfo.querySelector('strong'); chatHeaderPhoto.src = targetPhoto || 'https://i.stack.imgur.com/34AD2.jpg'; chatHeaderName.textContent = targetName; privateChatUserInfo.dataset.uid = targetUid; const chatId = [currentUserData.uid, targetUid].sort().join('_'); privateChatModal.dataset.chatId = chatId; fetchPrivateMessages(chatId); }
+    function fetchPrivateMessages(chatId) { if (privateChatUnsubscribe) privateChatUnsubscribe(); const messagesRef = db.collection('privateChats').doc(chatId).collection('messages').orderBy('createdAt'); privateChatUnsubscribe = messagesRef.onSnapshot(snapshot => { privateChatMessagesContainer.innerHTML = ''; snapshot.forEach(doc => { const message = doc.data(); const messageElement = createMessageElement(message, currentUserData, true); privateChatMessagesContainer.appendChild(messageElement); }); privateChatMessagesContainer.scrollTop = privateChatMessagesContainer.scrollHeight; }); }
+    privateChatForm.addEventListener('submit', async (e) => { e.preventDefault(); const chatId = privateChatModal.dataset.chatId; const messageInput = document.getElementById('private-chat-message-input'); const messageText = messageInput.value.trim(); if (messageText && currentUserData && chatId) { const messageData = { text: messageText, userId: currentUserData.uid, userName: currentUserData.name, userPhotoURL: currentUserData.photoURL, createdAt: firebase.firestore.FieldValue.serverTimestamp() }; await db.collection('privateChats').doc(chatId).collection('messages').add(messageData); await db.collection('privateChats').doc(chatId).set({ participants: chatId.split('_'), lastMessage: messageText, lastUpdatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }); messageInput.value = ''; } });
+    function createMessageElement(message, currentUser, isPrivateChat = false) { const messageDiv = document.createElement('div'); const isSent = currentUser && message.userId === currentUser.uid; messageDiv.classList.add('chat-message', isSent ? 'sent' : 'received'); const time = message.createdAt ? message.createdAt.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''; const rawText = message.text; const isImageUrl = (url) => (url.startsWith('http://') || url.startsWith('https://')) && /\.(jpeg|jpg|gif|png|webp)$/i.test(url); let messageContentHtml = isImageUrl(rawText) ? `<a href="${rawText}" target="_blank" rel="noopener noreferrer"><img src="${rawText}" class="chat-image" alt="User image"></a>` : rawText.replace(/</g, "<").replace(/>/g, ">"); let senderNameHtml = ''; if (!isSent && !isPrivateChat) { senderNameHtml = `<strong>${message.userName}</strong><br>`; } messageDiv.innerHTML = `<img src="${message.userPhotoURL || 'https://i.stack.imgur.com/34AD2.jpg'}" alt="${message.userName}" class="user-avatar"><div class="message-content"><div class="message-bubble">${senderNameHtml}${messageContentHtml}</div><div class="message-info">${time}</div></div>`; return messageDiv; }
+    function fetchChatMessages() { db.collection('chatMessages').orderBy('createdAt').limitToLast(100).onSnapshot(snapshot => { chatMessagesContainer.innerHTML = ''; snapshot.forEach(doc => { const messageElement = createMessageElement(doc.data(), currentUserData); chatMessagesContainer.appendChild(messageElement); }); chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; }); }
+    privateChatActions.addEventListener('click', (e) => { const callBtn = e.target.closest('button[data-call-type]'); if (callBtn) { const callType = callBtn.dataset.callType; initiateCall(callType); } });
+    function initiateCall(callType) { const targetUserPhoto = privateChatUserInfo.querySelector('img').src; const targetUserName = privateChatUserInfo.querySelector('strong').textContent; callUserPhoto.src = targetUserPhoto; callUserName.textContent = targetUserName; callStatus.textContent = callType === 'video' ? 'Video calling...' : 'Audio calling...'; callModal.classList.add('show'); }
+    endCallBtn.addEventListener('click', () => { callModal.classList.remove('show'); });
+
     </script>
+    
+    <!-- =========== ADSTERRA SOCIAL BAR AD START (Yeh Barkarar hai) =========== -->
+    <script type='text/javascript' src='//pl27185837.profitableratecpm.com/17/c6/35/17c635a23f67230c52f96c4ca97985d4.js'></script>
+    <!-- =========== ADSTERRA SOCIAL BAR AD END =========== -->
+
 </body>
 </html>
