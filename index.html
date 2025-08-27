@@ -75,6 +75,27 @@
         .post-actions button.liked { color: var(--primary-color); font-weight: bold; }
         .post-actions i { margin-right: 8px; font-size: 1.2rem; }
         
+        .header-right { display: flex; align-items: center; }
+        #language-switcher { margin-right: 15px; padding: 5px; border-radius: 4px; }
+        #profile-icon-container { display: flex; align-items: center; cursor: pointer; }
+        #header-user-name { margin-right: 10px; font-weight: bold; }
+        #header-user-photo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); }
+        #home-page { padding: 1rem; max-width: 680px; margin: 0 auto; }
+        .post-card { background: var(--light-color); border-radius: var(--border-radius); padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .post-header { display: flex; align-items: center; margin-bottom: 0.75rem; }
+        .post-header img { width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; object-fit: cover; }
+        .post-author-info { display: flex; flex-direction: column; }
+        .post-author-info strong { font-size: 0.95rem; }
+        .post-author-info small { font-size: 0.8rem; color: var(--grey-color); }
+        .post-content p { margin: 0.5rem 0; word-wrap: break-word; }
+        .post-content img { max-width: 100%; width: 100%; height: auto; border-radius: var(--border-radius); margin-top: 1rem; cursor: pointer; background-color: #f0f2f5; }
+        .post-stats { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e0e0e0; font-size: 0.9rem; color: var(--grey-color); }
+        .post-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; padding-top: 5px; }
+        .post-actions button { background: none; border: none; cursor: pointer; padding: 0.75rem; font-size: 0.95rem; color: var(--grey-color); display: flex; align-items: center; justify-content: center; border-radius: 4px; }
+        .post-actions button:hover { background-color: #f0f2f5; }
+        .post-actions button.liked { color: var(--primary-color); font-weight: bold; }
+        .post-actions i { margin-right: 8px; font-size: 1.2rem; }
+        
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; overflow-y: auto; display: none; align-items: center; justify-content: center; padding: 1rem; box-sizing: border-box; }
         .modal.show { display: flex; }
         .modal-content-wrapper { background: white; padding: 1rem; border-radius: var(--border-radius); width: 100%; max-width: 500px; position: relative; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column;}
@@ -237,13 +258,12 @@
         
     </style>
 </head>
-<body>
-    <!-- ================================================== -->
+<body>  <!-- ================================================== -->
     <!--          HTML Content (With Static Ads)            -->
     <!-- ================================================== -->
     <div id="auth-container">
         <div class="form-container" id="login-container"><h2 data-lang-key="loginTitle">Login</h2><form id="login-form"><input type="email" id="login-email" placeholder="Email" required><input type="password" id="login-password" placeholder="Password" required><button type="submit" data-lang-key="loginBtn">Login</button></form><p><span data-lang-key="noAccount">Don't have an account?</span> <a href="#" id="show-signup" data-lang-key="signupLink">Sign Up</a></p></div>
-        <div class="form-container" id="signup-container" style="display: none;"><h2 data-lang-key="signupTitle">Sign Up</h2><form id="signup-form"><input type="text" id="signup-name" placeholder="Full Name" required><input type="url" id="signup-photo" placeholder="Photo URL" required><input type="email" id="signup-email" placeholder="Email (For Login)" required><input type="password" id="signup-password" placeholder="Password (min. 6 characters)" required><button type="submit" data-lang-key="signupBtn">Sign Up</button></form><p><span data-lang-key="hasAccount">Already have an account?</span> <a href="#" id="show-login" data-lang-key="loginLink">Login</a></p></div>
+        <div class="form-container" id="signup-container" style="display: none;"><h2 data-lang-key="signupTitle">Sign Up</h2><form id="signup-form"><input type="text" id="signup-name" placeholder="Full Name" required><input type="url" id="signup-photo" placeholder="Photo URL (Optional)"><input type="email" id="signup-email" placeholder="Email (For Login)" required><input type="password" id="signup-password" placeholder="Password (min. 6 characters)" required><button type="submit" data-lang-key="signupBtn">Sign Up</button></form><p><span data-lang-key="hasAccount">Already have an account?</span> <a href="#" id="show-login" data-lang-key="loginLink">Login</a></p></div>
     </div>
 
     <div id="app-container" style="display: none;">
@@ -308,8 +328,7 @@
                         <input type="url" id="edit-photo" placeholder="New Photo URL">
                         <button type="submit" data-lang-key="saveChangesBtn">Save Changes</button>
                     </form>
-                </div>
-                <div class="user-posts-section">
+                </div> <div class="user-posts-section">
                     <h3 data-lang-key="myPostsTitle">My Posts</h3>
                     <div id="user-posts-container"></div>
                 </div>
@@ -414,9 +433,7 @@
             </div>
         </div>
         <button id="add-product-fab" title="Add a New Product/Service"><i class="fas fa-plus"></i></button>
-    </div>
-
-    <div id="create-business-profile-modal" class="modal">
+    </div> <div id="create-business-profile-modal" class="modal">
         <div class="modal-content-wrapper">
             <button class="close-modal-btn" data-target="create-business-profile-modal">×</button>
             <h3>Create Your Business Profile</h3>
@@ -576,8 +593,7 @@
             closeAllModals();
             currentUserData = null;
         }
-    });
-    async function updateUserPresence(uid, status) { if (!uid) return; try { const userRef = db.collection('users').doc(uid); await userRef.update({ presence: status, last_seen: firebase.firestore.FieldValue.serverTimestamp() }); } catch (error) { console.error("Error updating presence:", error); } }
+    });   async function updateUserPresence(uid, status) { if (!uid) return; try { const userRef = db.collection('users').doc(uid); await userRef.update({ presence: status, last_seen: firebase.firestore.FieldValue.serverTimestamp() }); } catch (error) { console.error("Error updating presence:", error); } }
     window.addEventListener('beforeunload', () => { if (auth.currentUser) { updateUserPresence(auth.currentUser.uid, 'offline'); } });
     
     logoutBtn.addEventListener('click', async () => {
@@ -588,7 +604,35 @@
         auth.signOut();
     });
     
-    signupForm.addEventListener('submit', (e) => { e.preventDefault(); const name = document.getElementById('signup-name').value; const photoURL = document.getElementById('signup-photo').value; const email = document.getElementById('signup-email').value; const password = document.getElementById('signup-password').value; auth.createUserWithEmailAndPassword(email, password).then(userCredential => { db.collection('users').doc(userCredential.user.uid).set({ name: name, photoURL: photoURL, email: email, presence: 'online', last_seen: firebase.firestore.FieldValue.serverTimestamp() }).then(() => signupForm.reset()); }).catch(error => alert("Error signing up: " + error.message)); });
+    // ============ UPDATE START ============
+    signupForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('signup-name').value;
+        const photoURLInput = document.getElementById('signup-photo').value.trim();
+        const email = document.getElementById('signup-email').value;
+        const password = document.getElementById('signup-password').value;
+        
+        // Use default photo if user doesn't provide one
+        const finalPhotoURL = photoURLInput || 'https://i.stack.imgur.com/34AD2.jpg';
+
+        auth.createUserWithEmailAndPassword(email, password)
+            .then(userCredential => {
+                db.collection('users').doc(userCredential.user.uid).set({
+                    name: name,
+                    photoURL: finalPhotoURL, // Use the final URL here
+                    email: email,
+                    presence: 'online',
+                    last_seen: firebase.firestore.FieldValue.serverTimestamp()
+                }).then(() => {
+                    signupForm.reset();
+                });
+            })
+            .catch(error => {
+                alert("Error signing up: " + error.message);
+            });
+    });
+    // ============ UPDATE END ============
+
     loginForm.addEventListener('submit', (e) => { e.preventDefault(); const email = document.getElementById('login-email').value; const password = document.getElementById('login-password').value; auth.signInWithEmailAndPassword(email, password).then(() => loginForm.reset()).catch(error => alert("Error logging in: " + error.message)); });
 
     function initializeApp(uid) {
@@ -631,8 +675,7 @@
         if (!currentUserData) return;
         businessDashboardModal.classList.add('show');
         loadBusinessProfile();
-    });
-    async function loadBusinessProfile() {
+    });async function loadBusinessProfile() {
         if (!currentUserData) return;
         businessDashboardMainContent.innerHTML = `<p style="text-align:center; padding: 2rem;">Loading Profile...</p>`;
 
@@ -697,8 +740,7 @@
                 productsGrid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: var(--grey-color);">You haven't added any products yet. Use the '+' button below to add one.</p>`;
                 return;
             }
-
-            snapshot.forEach(doc => {
+snapshot.forEach(doc => {
                 const product = { id: doc.id, ...doc.data() };
                 const productCard = document.createElement('div');
                 productCard.className = 'product-card';
@@ -844,7 +886,6 @@
                 if (commentsCountEl) commentsCountEl.textContent = `${commentsCount} Comments`;
                 if(likeBtnEl) likeBtnEl.classList.toggle('liked', newIsLiked);
             });
-            
             productDetailContent.innerHTML = `
                 <!-- BANNER AD: PRODUCT DETAIL TOP -->
                 <div class="banner-ad-container">
